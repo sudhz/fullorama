@@ -132,7 +132,7 @@ jobs:
           PUBLISHER_ID: ${{ vars.CHROME_PUBLISHER_ID }}
           EXTENSION_ID: ${{ vars.CHROME_EXTENSION_ID }}
           VERSION: ${{ needs.build.outputs.version }}
-          ZIP: artifacts/youtube-ultrawide-crop-v${{ needs.build.outputs.version }}-chrome.zip
+          ZIP: artifacts/fullorama-v${{ needs.build.outputs.version }}-chrome.zip
         run: |
           set -euo pipefail
 
@@ -295,7 +295,7 @@ jobs:
 
           rm -rf dist-firefox
           unzip -q \
-            "artifacts/youtube-ultrawide-crop-v${RELEASE_VERSION}-firefox.zip" \
+            "artifacts/fullorama-v${RELEASE_VERSION}-firefox.zip" \
             -d dist-firefox
 
           bunx web-ext sign \
@@ -304,7 +304,7 @@ jobs:
             --api-key "$AMO_API_KEY" \
             --api-secret "$AMO_API_SECRET" \
             --channel listed \
-            --upload-source-code "artifacts/youtube-ultrawide-crop-v${RELEASE_VERSION}-source.zip" \
+            --upload-source-code "artifacts/fullorama-v${RELEASE_VERSION}-source.zip" \
             --amo-metadata /tmp/amo-metadata.json \
             --timeout 600000 \
             --approval-timeout 0 \

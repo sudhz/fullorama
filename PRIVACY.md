@@ -1,4 +1,4 @@
-# Privacy Policy
+# Privacy Policy — Fullorama for YouTube™
 
 Effective date: 2026-10-04
 
@@ -47,8 +47,8 @@ The extension uses the `storage` permission to remember the crop toggle. The con
 
 ## Third Parties
 
-This extension is not affiliated with YouTube, Google, or Alphabet. Tally hosts the optional feedback form.
+This extension is not affiliated with YouTube, Google, or Alphabet. YouTube is a trademark of Google LLC. Tally hosts the optional feedback form.
 
 ## Contact
 
-For privacy questions, open an issue at https://github.com/sudhz/youtube-ultrawide-crop/issues.
+For privacy questions, open an issue at https://github.com/sudhz/fullorama/issues.

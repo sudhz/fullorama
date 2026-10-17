@@ -1,20 +1,22 @@
 {
-  "name": "youtube-ultrawide-crop",
-  "version": "1.1.2",
-  "description": "Enjoy YouTube without distracting black bars on your ultrawide monitor.",
+  "name": "fullorama",
+  "version": "1.2.0",
+  "description": "Fill your ultrawide screen with YouTube videos without distracting black bars.",
   "type": "module",
   "license": "MIT",
   "packageManager": "bun@1.3.14",
-  "homepage": "https://github.com/sudhz/youtube-ultrawide-crop#readme",
+  "homepage": "https://github.com/sudhz/fullorama#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sudhz/youtube-ultrawide-crop.git"
+    "url": "git+https://github.com/sudhz/fullorama.git"
   },
   "bugs": {
-    "url": "https://github.com/sudhz/youtube-ultrawide-crop/issues"
+    "url": "https://github.com/sudhz/fullorama/issues"
   },
   "keywords": [
+    "fullorama",
     "chrome-extension",
+    "firefox-addon",
     "youtube",
     "ultrawide",
     "zoom-to-fill",
@@ -27,8 +29,8 @@
     "test": "bun run build && bun test",
     "lint:firefox": "web-ext lint --source-dir dist-firefox",
     "validate": "bun run typecheck && bun run test && bun run lint:firefox",
-    "pack:chrome": "web-ext build --source-dir dist-chrome --artifacts-dir artifacts --filename youtube-ultrawide-crop-v{version}-chrome.zip --overwrite-dest",
-    "pack:firefox": "web-ext build --source-dir dist-firefox --artifacts-dir artifacts --filename youtube-ultrawide-crop-v{version}-firefox.zip --overwrite-dest",
+    "pack:chrome": "web-ext build --source-dir dist-chrome --artifacts-dir artifacts --filename fullorama-v{version}-chrome.zip --overwrite-dest",
+    "pack:firefox": "web-ext build --source-dir dist-firefox --artifacts-dir artifacts --filename fullorama-v{version}-firefox.zip --overwrite-dest",
     "pack:source": "bun run scripts/package-source.ts",
     "pack:all": "bun run pack:chrome && bun run pack:firefox && bun run pack:source",
     "release": "bun run validate && bun run pack:all"

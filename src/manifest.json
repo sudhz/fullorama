@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Ultrawide Crop",
-  "description": "Enjoy YouTube without distracting black bars on your ultrawide monitor.",
+  "name": "Fullorama for YouTube™",
+  "description": "Fill your ultrawide screen with YouTube videos, without distracting black bars.",
   "permissions": [
     "storage"
   ],
@@ -12,7 +12,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "YouTube Ultrawide Crop",
+    "default_title": "Fullorama for YouTube™",
     "default_icon": {
       "16": "icons/16.png",
       "48": "icons/48.png",

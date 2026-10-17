@@ -5,8 +5,8 @@
 
 import { isEnabled } from '../storage/state';
 
-const CROP_CLASS = 'ytuc-crop-on';
-const SCALE_VAR = '--ytuc-scale';
+const CROP_CLASS = 'flrm-crop-on';
+const SCALE_VAR = '--flrm-scale';
 
 export function applyCrop(player: HTMLElement | null): void {
     if (!player) {

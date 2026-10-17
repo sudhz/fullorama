@@ -1,5 +1,5 @@
 /**
- * YouTube Ultrawide Crop
+ * Fullorama for YouTube™
  *
  * Adds a crop button to the YouTube player that zooms the video to fill
  * the player, removing letterboxing. The toggle persists in

@@ -1,5 +1,7 @@
 # YouTube Ultrawide Crop — demo video: making of
 
+> Historical note: This document describes the original YouTube Ultrawide Crop film (v1.1.2), before the project was renamed Fullorama for YouTube™.
+
 `youtube-ultrawide-crop-demo.mp4`: 42.6 s, 1920×1080, 30 fps, H.264 + AAC. It is attached to GitHub Release v1.1.2 as an asset, not committed to the repo:
 
 ```bash

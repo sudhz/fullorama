@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "youtube-ultrawide-crop",
+      "name": "fullorama",
       "devDependencies": {
         "@types/bun": "^1.2.0",
         "@types/chrome": "^0.0.326",

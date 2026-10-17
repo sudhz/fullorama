@@ -6,7 +6,7 @@ import { isEnabled, toggleCrop } from '../storage/state';
 import { applyCrop } from './crop';
 import { getPlayer } from './dom';
 
-const BUTTON_ATTR = 'data-ytuc-btn';
+const BUTTON_ATTR = 'data-flrm-btn';
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 function svgElement<T extends SVGElement>(
@@ -49,7 +49,7 @@ function createIcon(): SVGSVGElement {
     svg.append(
         group,
         svgElement<SVGRectElement>('rect', {
-            class: 'ytuc-on',
+            class: 'flrm-on',
             x: '13',
             y: '13',
             width: '10',
@@ -81,9 +81,9 @@ export function injectButton(
 
     const button = document.createElement('button');
     button.setAttribute(BUTTON_ATTR, '');
-    button.className = 'ytp-button ytuc-btn';
-    button.title = 'Ultrawide crop';
-    button.setAttribute('aria-label', 'Ultrawide crop');
+    button.className = 'ytp-button flrm-btn';
+    button.title = 'Fullorama crop';
+    button.setAttribute('aria-label', 'Fullorama crop');
     button.setAttribute('aria-pressed', String(isEnabled()));
     button.append(createIcon());
 
