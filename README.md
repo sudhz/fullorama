@@ -16,7 +16,7 @@ YouTube is a trademark of Google LLC.
 
 ## Demo
 
-[![Fullorama for YouTube demo video: play](marketing/launch-film/demo-poster.jpg)](https://github.com/sudhz/fullorama/releases/download/v1.2.0/fullorama-demo.mp4)
+https://github.com/user-attachments/assets/ac2239f3-a852-490e-bbcf-1491d91d10d8
 
 [How the demo video was made](marketing/launch-film/making-of.md)
 
