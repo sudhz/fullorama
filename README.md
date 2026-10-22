@@ -16,7 +16,7 @@ YouTube is a trademark of Google LLC.
 
 ## Demo
 
-https://github.com/user-attachments/assets/ac2239f3-a852-490e-bbcf-1491d91d10d8
+https://github.com/user-attachments/assets/3c62393f-5d82-4c7b-8543-0c3c0938f052
 
 [How the demo video was made](marketing/launch-film/making-of.md)
 
