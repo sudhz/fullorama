@@ -75,7 +75,7 @@ No, only YouTube in a desktop browser (Chrome or Firefox). It doesn't work on Ne
 
 ### Will it slow YouTube down or make videos sharper?
 
-It just zooms in on the video that's already playing, so it doesn't change the video's quality or load anything extra. Zooming in won't make it sharper, either. We haven't measured its performance impact, so we won't promise a number.
+It just zooms in on the video that's already playing, so it doesn't change the video's quality or load anything extra. Zooming in won't make it sharper, either. We haven't measured its effect on performance yet, but it does very little work. It only resizes the video you're watching.
 
 ### What's the toolbar icon for?
 
