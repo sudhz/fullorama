@@ -37,7 +37,7 @@ https://github.com/user-attachments/assets/3c62393f-5d82-4c7b-8543-0c3c0938f052
 
 ## FAQ
 
-### How do I get rid of the black bars?
+### How do I watch YouTube full screen on an ultrawide monitor?
 
 Install Fullorama for [Chrome](https://chromewebstore.google.com/detail/fullorama-for-youtube/pacjdmdcmmnbpnjfhmjfgenbpedbakjg) or [Firefox](https://addons.mozilla.org/firefox/addon/fullorama/) and play any YouTube video. Look at the bottom-right of the player: there's a new button with four little corner brackets, next to the settings gear. Click it and the video zooms in to fill the player. A small square appears in the middle of the icon to show it's on. Click it again to go back to normal.
 
@@ -61,13 +61,13 @@ Yes. When you switch to theater mode or fullscreen, the zoom adjusts automatical
 
 No. Turn it on once and it stays on as you watch more videos, refresh, or browse around YouTube. Turn it off the same way whenever you like. The setting applies to all of YouTube in that browser.
 
-### I have a 32:9 monitor. Will it work?
+### Does it work on 21:9 and 32:9 ultrawide monitors?
 
-Yes. Fullorama works out the zoom from your player's shape, so it fits 21:9, 32:9 and anything in between. On very wide screens, more of the top and bottom gets trimmed, because the video has to zoom in further to fill the width.
+Yes. Fullorama works out the zoom from the shape of your player and the video, so it fits 21:9, 32:9 and anything in between. When the video is narrower than your screen, some of the top and bottom is trimmed. When it's wider, some of the sides are.
 
 ### Can I fill the screen and still see the whole picture?
 
-Not if the video and your screen are different shapes: filling the space without stretching always trims a bit off. If you'd rather see everything, turn the button off and keep the bars.
+Only if the video is already the same shape as your screen. Otherwise a little of the edges is trimmed to fill it. You can turn the button off any time to see the whole picture.
 
 ### Does it work on Netflix, other sites, or my phone?
 
@@ -85,7 +85,7 @@ Clicking Fullorama's icon in your browser toolbar shows whether the zoom is on o
 
 No. It saves one thing in your browser: whether the zoom is on or off. It doesn't track what you watch, has no ads, and needs no account.
 
-Feedback is optional and goes through a separate form run by Tally. It opens if you choose "Share feedback" in the toolbar popup, or after you uninstall. The form link includes the extension's version and where you opened it from. On Firefox, those two details are only sent if you've allowed the optional data permission. See [PRIVACY.md](PRIVACY.md) for the full details.
+Feedback is optional and goes through a separate form run by Tally. It opens if you choose "Share feedback" in the toolbar popup, or after you uninstall. The form link includes the extension's version and where you opened it from. On Firefox, those two details are only sent if you've allowed the optional data permission. See the [privacy policy](PRIVACY.md) for the full details.
 
 ### Is it free?
 
