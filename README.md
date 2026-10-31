@@ -2,6 +2,8 @@
 
 Enjoy YouTube without distracting black bars on your ultrawide monitor.
 
+Website: https://fullorama.com
+
 [![Install from the Chrome Web Store](https://img.shields.io/badge/Get_it_on-Chrome_Web_Store-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/fullorama-for-youtube/pacjdmdcmmnbpnjfhmjfgenbpedbakjg)
 [![Install from Firefox Add-ons](https://img.shields.io/badge/Get_it_on-Firefox_Add--ons-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/firefox/addon/fullorama/)
 
@@ -47,7 +49,7 @@ It's with YouTube's own buttons at the bottom-right of the video, between the se
 
 ### Will the video look stretched?
 
-No. Fullorama zooms in evenly from the center, so people and objects keep their normal shape. The trade-off is that a little of the top and bottom gets trimmed. There's no stretch option.
+No. Fullorama zooms in evenly from the center, so people and objects keep their normal shape. The trade-off is that a little of the edges gets trimmed.
 
 ### Why do some videos still have black bars?
 
