@@ -15,7 +15,6 @@ const SOURCE_PATHS = [
     'bun.lock',
     'tsconfig.json',
     'README.md',
-    'PRIVACY.md',
     'LICENSE',
 ];
 

@@ -87,27 +87,11 @@ Clicking Fullorama's icon in your browser toolbar shows whether the zoom is on o
 
 No. It saves one thing in your browser: whether the zoom is on or off. It doesn't track what you watch, has no ads, and needs no account.
 
-Feedback is optional and goes through a separate form run by Tally. It opens if you choose "Share feedback" in the toolbar popup, or after you uninstall. The form link includes the extension's version and where you opened it from. On Firefox, those two details are only sent if you've allowed the optional data permission. See the [privacy policy](PRIVACY.md) for the full details.
+Feedback is optional and goes through a separate form run by Tally. It opens if you choose "Share feedback" in the toolbar popup, or after you uninstall. The form link includes the extension's version and where you opened it from. On Firefox, those two details are only sent if you've allowed the optional data permission. See the [privacy policy](https://fullorama.com/privacy) for the full details.
 
 ### Is it free?
 
 Yes, completely free and open source. The code is on GitHub under the [MIT license](LICENSE).
-
-## Privacy and Permissions
-
-Fullorama doesn't track what you watch, shows no ads and needs no account. See
-[PRIVACY.md](PRIVACY.md) for the full privacy policy.
-
-| Permission | Why                                        |
-| ---------- | ------------------------------------------ |
-| `storage`  | Stores whether ultrawide crop is on or off |
-
-The content script is limited to `https://www.youtube.com/*`.
-
-The popup's **Share feedback** link opens a Tally form, and the browser opens
-the same form when you uninstall. The extension adds only a `source` label and
-its `version` to the form URL. On Firefox, those values are included only when
-the optional technical and interaction data permission is enabled.
 
 ## How It Works
 
