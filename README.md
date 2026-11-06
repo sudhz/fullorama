@@ -65,7 +65,7 @@ No. Turn it on once and it stays on as you watch more videos, refresh, or browse
 
 ### Does it work on 21:9 and 32:9 ultrawide monitors?
 
-Yes. Fullorama works out the zoom from the shape of your player and the video, so it fits 21:9, 32:9 and anything in between. When the video is narrower than your screen, some of the top and bottom is trimmed. When it's wider, some of the sides are.
+Yes. Fullorama works out the zoom from the shape of your player and the video, so it fits 21:9, 32:9 and anything in between. On wider screens, a little more of the edges is trimmed.
 
 ### Can I fill the screen and still see the whole picture?
 
