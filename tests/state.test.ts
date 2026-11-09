@@ -39,69 +39,141 @@ beforeEach(() => {
 const state = await import('../src/storage/state');
 
 describe('loadState', () => {
-    it('migrates legacy enabled to crop and removes the old key', async () => {
-        store.cropEnabled = true;
+    it('keeps existing fill keys', async () => {
+        store.fillEnabled = false;
+        store.fillMode = 'stretch';
+
+        await state.loadState();
+
+        expect(state.getMode()).toBe('stretch');
+        expect(state.isEnabled()).toBe(false);
+        expect(store.fillEnabled).toBe(false);
+        expect(store.fillMode).toBe('stretch');
+        expect(removed).toEqual([]);
+    });
+
+    it('migrates the legacy tri-state crop', async () => {
+        store.cropMode = 'crop';
 
         await state.loadState();
 
         expect(state.getMode()).toBe('crop');
-        expect(store.cropMode).toBe('crop');
-        expect('cropEnabled' in store).toBe(false);
-        expect(removed).toContainEqual(['cropEnabled']);
+        expect(state.isEnabled()).toBe(true);
+        expect(store.fillMode).toBe('crop');
+        expect(store.fillEnabled).toBe(true);
+        expect('cropMode' in store).toBe(false);
     });
 
-    it('migrates a legacy disabled value to off', async () => {
-        store.cropEnabled = false;
-
-        await state.loadState();
-
-        expect(state.getMode()).toBe('off');
-        expect(store.cropMode).toBe('off');
-        expect('cropEnabled' in store).toBe(false);
-    });
-
-    it('starts a fresh install at off', async () => {
-        await state.loadState();
-
-        expect(state.getMode()).toBe('off');
-        expect(store.cropMode).toBe('off');
-    });
-
-    it('keeps an existing mode', async () => {
+    it('migrates the legacy tri-state stretch', async () => {
         store.cropMode = 'stretch';
 
         await state.loadState();
 
         expect(state.getMode()).toBe('stretch');
-        expect(store.cropMode).toBe('stretch');
-        expect(removed).toEqual([]);
+        expect(state.isEnabled()).toBe(true);
+        expect(store.fillMode).toBe('stretch');
+        expect(store.fillEnabled).toBe(true);
+        expect('cropMode' in store).toBe(false);
     });
 
-    it('falls back to migration when the stored mode is invalid', async () => {
-        store.cropMode = 'zoom';
+    it('migrates the legacy tri-state off to a disabled crop', async () => {
+        store.cropMode = 'off';
+
+        await state.loadState();
+
+        expect(state.getMode()).toBe('crop');
+        expect(state.isEnabled()).toBe(false);
+        expect(store.fillMode).toBe('crop');
+        expect(store.fillEnabled).toBe(false);
+    });
+
+    it('migrates the legacy boolean on to crop on', async () => {
         store.cropEnabled = true;
 
         await state.loadState();
 
         expect(state.getMode()).toBe('crop');
-        expect(store.cropMode).toBe('crop');
+        expect(state.isEnabled()).toBe(true);
+        expect(store.fillMode).toBe('crop');
+        expect(store.fillEnabled).toBe(true);
+        expect('cropEnabled' in store).toBe(false);
+    });
+
+    it('migrates the legacy boolean off to a disabled crop', async () => {
+        store.cropEnabled = false;
+
+        await state.loadState();
+
+        expect(state.getMode()).toBe('crop');
+        expect(state.isEnabled()).toBe(false);
+        expect(store.fillMode).toBe('crop');
+        expect(store.fillEnabled).toBe(false);
+        expect('cropEnabled' in store).toBe(false);
+    });
+
+    it('starts a fresh install with crop off', async () => {
+        await state.loadState();
+
+        expect(state.getMode()).toBe('crop');
+        expect(state.isEnabled()).toBe(false);
+        expect(store.fillMode).toBe('crop');
+        expect(store.fillEnabled).toBe(false);
+    });
+
+    it('falls back through legacy values when the new mode is invalid', async () => {
+        store.fillMode = 'zoom';
+        store.fillEnabled = true;
+        store.cropEnabled = true;
+
+        await state.loadState();
+
+        expect(state.getMode()).toBe('crop');
+        expect(state.isEnabled()).toBe(true);
+        expect(store.fillMode).toBe('crop');
+        expect('cropEnabled' in store).toBe(false);
     });
 });
 
-describe('cycleMode', () => {
-    it('advances through off, crop, stretch and back', async () => {
+describe('selectMode', () => {
+    it('selects a mode and turns fill on', async () => {
         await state.loadState();
 
-        state.cycleMode();
-        expect(state.getMode()).toBe('crop');
-        expect(store.cropMode).toBe('crop');
+        state.selectMode('stretch');
 
-        state.cycleMode();
         expect(state.getMode()).toBe('stretch');
-        expect(store.cropMode).toBe('stretch');
+        expect(state.isEnabled()).toBe(true);
+        expect(store.fillMode).toBe('stretch');
+        expect(store.fillEnabled).toBe(true);
+    });
 
-        state.cycleMode();
-        expect(state.getMode()).toBe('off');
-        expect(store.cropMode).toBe('off');
+    it('keeps fill on when re-selecting the active mode', async () => {
+        store.fillEnabled = true;
+        store.fillMode = 'crop';
+        await state.loadState();
+
+        state.selectMode('crop');
+
+        expect(state.getMode()).toBe('crop');
+        expect(state.isEnabled()).toBe(true);
+    });
+});
+
+describe('toggleEnabled', () => {
+    it('flips only the enabled flag', async () => {
+        store.fillEnabled = false;
+        store.fillMode = 'stretch';
+        await state.loadState();
+
+        state.toggleEnabled();
+
+        expect(state.isEnabled()).toBe(true);
+        expect(state.getMode()).toBe('stretch');
+        expect(store.fillEnabled).toBe(true);
+        expect(store.fillMode).toBe('stretch');
+
+        state.toggleEnabled();
+
+        expect(state.isEnabled()).toBe(false);
+        expect(store.fillEnabled).toBe(false);
     });
 });

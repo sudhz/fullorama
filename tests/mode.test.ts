@@ -1,27 +1,36 @@
 import { describe, expect, it } from 'bun:test';
-import { nextMode, parseMode } from '../src/storage/mode';
+import { parseFillMode, parseLegacyMode } from '../src/storage/mode';
 
-describe('parseMode', () => {
-    it('accepts the three known modes', () => {
-        expect(parseMode('off')).toBe('off');
-        expect(parseMode('crop')).toBe('crop');
-        expect(parseMode('stretch')).toBe('stretch');
+describe('parseFillMode', () => {
+    it('accepts crop and stretch', () => {
+        expect(parseFillMode('crop')).toBe('crop');
+        expect(parseFillMode('stretch')).toBe('stretch');
     });
 
     it('rejects unknown values', () => {
-        expect(parseMode(undefined)).toBeNull();
-        expect(parseMode(null)).toBeNull();
-        expect(parseMode(true)).toBeNull();
-        expect(parseMode('CROP')).toBeNull();
-        expect(parseMode('on')).toBeNull();
-        expect(parseMode(1)).toBeNull();
+        expect(parseFillMode(undefined)).toBeNull();
+        expect(parseFillMode(null)).toBeNull();
+        expect(parseFillMode(true)).toBeNull();
+        expect(parseFillMode('off')).toBeNull();
+        expect(parseFillMode('CROP')).toBeNull();
+        expect(parseFillMode('on')).toBeNull();
+        expect(parseFillMode(1)).toBeNull();
     });
 });
 
-describe('nextMode', () => {
-    it('cycles off -> crop -> stretch -> off', () => {
-        expect(nextMode('off')).toBe('crop');
-        expect(nextMode('crop')).toBe('stretch');
-        expect(nextMode('stretch')).toBe('off');
+describe('parseLegacyMode', () => {
+    it('accepts the three legacy modes', () => {
+        expect(parseLegacyMode('off')).toBe('off');
+        expect(parseLegacyMode('crop')).toBe('crop');
+        expect(parseLegacyMode('stretch')).toBe('stretch');
+    });
+
+    it('rejects unknown values', () => {
+        expect(parseLegacyMode(undefined)).toBeNull();
+        expect(parseLegacyMode(null)).toBeNull();
+        expect(parseLegacyMode(true)).toBeNull();
+        expect(parseLegacyMode('CROP')).toBeNull();
+        expect(parseLegacyMode('on')).toBeNull();
+        expect(parseLegacyMode(1)).toBeNull();
     });
 });

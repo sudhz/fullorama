@@ -85,6 +85,133 @@ body {
   color: var(--muted);
 }
 
+.modes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.mode {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  padding: 7px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mode:hover {
+  border-color: #4a4a4a;
+}
+
+.mode:focus-visible {
+  outline: 2px solid var(--on);
+  outline-offset: 2px;
+}
+
+.mode.is-selected {
+  border-color: var(--on);
+}
+
+.mode.is-selected .mode-label {
+  color: var(--on);
+}
+
+.mode.is-on {
+  background: rgba(43, 166, 64, 0.16);
+  box-shadow: inset 0 0 0 1px var(--on);
+}
+
+.preview {
+  --preview-fill: 1.3125;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  overflow: hidden;
+  background: #000;
+  border-radius: 6px;
+}
+
+.preview-frame {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-width: none;
+  transform-origin: center center;
+}
+
+.mode[data-mode="crop"] .preview-frame {
+  animation: preview-crop 5s ease-in-out infinite;
+}
+
+.mode[data-mode="stretch"] .preview-frame {
+  animation: preview-stretch 5s ease-in-out infinite;
+}
+
+.mode-label {
+  padding: 0 2px 1px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@keyframes preview-crop {
+  0%,
+  20% {
+    transform: scale(1);
+  }
+
+  30%,
+  70% {
+    transform: scale(var(--preview-fill));
+  }
+
+  80%,
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes preview-stretch {
+  0%,
+  20% {
+    transform: scaleX(1);
+  }
+
+  30%,
+  70% {
+    transform: scaleX(var(--preview-fill));
+  }
+
+  80%,
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preview-frame {
+    animation: none;
+  }
+
+  .mode[data-mode="crop"] .preview-frame {
+    transform: scale(var(--preview-fill));
+  }
+
+  .mode[data-mode="stretch"] .preview-frame {
+    transform: scaleX(var(--preview-fill));
+  }
+}
+
 .links {
   display: flex;
 }

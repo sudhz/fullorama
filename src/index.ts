@@ -1,13 +1,13 @@
 /**
  * Fullorama for YouTube™
  *
- * Adds a mode button to the YouTube player that cycles through off, crop,
- * and stretch. Crop zooms the video to fill the player; stretch scales it
- * to fill. The mode persists in chrome.storage.local across videos,
- * refreshes, and navigation.
+ * Adds a button to the YouTube player that turns the selected fill mode on or
+ * off. The toolbar popup chooses crop (uniform zoom that trims edges) or
+ * stretch (scales one axis and distorts). The mode and on/off state persist in
+ * chrome.storage.local across videos, refreshes, and navigation.
  */
 
-import { getMode, loadState, onStorageChange } from './storage/state';
+import { getMode, isEnabled, loadState, onStorageChange } from './storage/state';
 import { updateButton } from './player/button';
 import { applyFit } from './player/fit';
 import { getPlayer } from './player/dom';
@@ -25,10 +25,10 @@ async function init(): Promise<void> {
     // Sync from other tabs
     onStorageChange(() => {
         updateButton();
-        applyFit(getPlayer(), getMode());
+        applyFit(getPlayer(), isEnabled(), getMode());
     });
 
-    // Apply crop immediately on resize and fullscreen
+    // Apply the selected mode immediately on resize and fullscreen
     window.addEventListener('resize', applyFitNow, { passive: true });
     document.addEventListener('fullscreenchange', applyFitAndSync);
     document.addEventListener('yt-navigate-finish', retryBurst);

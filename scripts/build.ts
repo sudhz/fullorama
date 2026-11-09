@@ -79,6 +79,7 @@ function copyStatic(target: BuildTarget): void {
   copyFileSync('src/content.css', `${target.distDir}/content.css`);
   copyFileSync('src/popup/popup.html', `${target.distDir}/popup.html`);
   copyFileSync('src/popup/popup.css', `${target.distDir}/popup.css`);
+  copyFileSync('src/popup/preview.jpg', `${target.distDir}/preview.jpg`);
   rmSync(`${target.distDir}/icons`, { recursive: true, force: true });
   cpSync('icons', `${target.distDir}/icons`, { recursive: true });
 }

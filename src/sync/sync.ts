@@ -3,7 +3,7 @@
  * Watches for YouTube DOM changes, navigation events, and player resizes.
  */
 
-import { getMode } from '../storage/state';
+import { getMode, isEnabled } from '../storage/state';
 import { applyFit } from '../player/fit';
 import { injectButton } from '../player/button';
 import { getPlayer, getControls } from '../player/dom';
@@ -60,7 +60,7 @@ function sync(): void {
     if (player && controls) {
         injectButton(player, controls);
     }
-    applyFit(player, getMode());
+    applyFit(player, isEnabled(), getMode());
 }
 
 export function scheduleSync(): void {
@@ -111,10 +111,10 @@ export function onVideoMetadata(event: Event): void {
 }
 
 export function applyFitNow(): void {
-    applyFit(getPlayer(), getMode());
+    applyFit(getPlayer(), isEnabled(), getMode());
 }
 
 export function applyFitAndSync(): void {
-    applyFit(getPlayer(), getMode());
+    applyFit(getPlayer(), isEnabled(), getMode());
     scheduleSync();
 }

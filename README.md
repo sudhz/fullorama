@@ -7,11 +7,11 @@ Website: https://fullorama.com
 [![Install from the Chrome Web Store](https://img.shields.io/badge/Get_it_on-Chrome_Web_Store-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/fullorama-for-youtube/pacjdmdcmmnbpnjfhmjfgenbpedbakjg)
 [![Install from Firefox Add-ons](https://img.shields.io/badge/Get_it_on-Firefox_Add--ons-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/firefox/addon/fullorama/)
 
-Fullorama for YouTube™ adds one button directly to YouTube's player. Click it to
-cycle between crop, stretch, and off. Crop zooms in evenly to fill the player and
-trims the edges; stretch widens the picture to fill it and leaves nothing out.
-The choice stays across videos, refreshes, navigation, and fullscreen, until you
-change it.
+Fullorama for YouTube™ adds one button directly to YouTube's player. Choose Crop
+or Stretch in the toolbar popup, then click the player button to turn that mode
+on or off. Crop zooms in evenly to fill the player and trims the edges; stretch
+widens the picture to fill it and leaves nothing out. The choice stays across
+videos, refreshes, navigation, and fullscreen, until you change it.
 
 Built for 21:9 and other ultrawide displays.
 
@@ -32,20 +32,22 @@ https://github.com/user-attachments/assets/3c62393f-5d82-4c7b-8543-0c3c0938f052
 
 ## Features
 
-- YouTube player button that cycles off, crop, and stretch
+- Choose Crop or Stretch in the toolbar popup
+- Animated previews show what each mode does
+- YouTube player button turns the selected mode on or off
 - Crop mode zooms evenly to fill the player and trims the edges
 - Stretch mode fills the player without trimming, at the cost of distortion
-- The chosen mode persists across videos, refreshes, and navigation
+- The selected mode and on/off state persist across videos, refreshes, and navigation
 - Works with YouTube's single-page navigation
 - Works in theater mode and fullscreen
-- Read-only popup shows the current mode
+- Popup shows the selected mode and whether it's on or off
 - Optional feedback form (popup link and uninstall survey)
 
 ## FAQ
 
 ### How do I watch YouTube full screen on an ultrawide monitor?
 
-Install Fullorama for [Chrome](https://chromewebstore.google.com/detail/fullorama-for-youtube/pacjdmdcmmnbpnjfhmjfgenbpedbakjg) or [Firefox](https://addons.mozilla.org/firefox/addon/fullorama/) and play any YouTube video. Look at the bottom-right of the player: there's a new button with four little corner brackets, next to the settings gear. Click it once to crop, which zooms the video in to fill the player. Click it again to stretch, which fills the player without trimming anything. A small square or wide bar appears in the middle of the icon to show which mode is on. Click it once more to go back to normal.
+Install Fullorama for [Chrome](https://chromewebstore.google.com/detail/fullorama-for-youtube/pacjdmdcmmnbpnjfhmjfgenbpedbakjg) or [Firefox](https://addons.mozilla.org/firefox/addon/fullorama/) and play any YouTube video. Click Fullorama's icon in your browser toolbar and choose Crop or Stretch from the two preview cards. Crop zooms the video in to fill the player; stretch fills it without trimming anything, at the cost of distortion. Then use the new button with four little corner brackets at the bottom-right of the player, next to the settings gear, to turn that mode on or off. A small square (crop) or wide bar (stretch) appears in the middle of the icon while it's on.
 
 ### I can't find the button. Where is it?
 
@@ -53,7 +55,7 @@ It's with YouTube's own buttons at the bottom-right of the video, between the se
 
 ### Will the video look stretched?
 
-Crop mode doesn't stretch anything. It zooms in evenly from the center, so people and objects keep their normal shape; the trade-off is that a little of the edges gets trimmed. Stretch mode does stretch the picture to fill the player and will make it look wider or taller than it is. Nothing gets trimmed in stretch mode. Use crop if you care more about shape, and stretch if you care more about seeing the whole frame.
+Crop mode doesn't stretch anything. It zooms in evenly from the center, so people and objects keep their normal shape; the trade-off is that a little of the edges gets trimmed. Stretch mode does stretch the picture to fill the player and will make it look wider or taller than it is. Nothing gets trimmed in stretch mode. Use crop if you care more about shape, and stretch if you care more about seeing the whole frame. The player button turns the selected mode off at any time.
 
 ### Why do some videos still have black bars?
 
@@ -65,7 +67,7 @@ Yes. When you switch to theater mode or fullscreen, the scaling adjusts automati
 
 ### Do I have to click it for every video?
 
-No. Pick a mode once and it stays selected as you watch more videos, refresh, or browse around YouTube. Change it the same way whenever you like. The setting applies to all of YouTube in that browser.
+No. Pick a mode once and it stays selected as you watch more videos, refresh, or browse around YouTube. It also remembers whether it was on or off. Change either from the toolbar popup or the player button whenever you like. The setting applies to all of YouTube in that browser.
 
 ### Does it work on 21:9 and 32:9 ultrawide monitors?
 
@@ -73,7 +75,7 @@ Yes. Fullorama works out the scaling from the shape of your player and the video
 
 ### Can I fill the screen and still see the whole picture?
 
-Only if the video is already the same shape as your screen. Crop mode trims a little of the edges to fill it; stretch mode keeps everything but distorts the shape. You can turn the button off any time to see the original picture.
+Only if the video is already the same shape as your screen. Crop mode trims a little of the edges to fill it; stretch mode keeps everything but distorts the shape. You can turn the selected mode off any time to see the original picture.
 
 ### Does it work on Netflix, other sites, or my phone?
 
@@ -85,11 +87,11 @@ It just scales the video that's already playing, so it doesn't change the video'
 
 ### What's the toolbar icon for?
 
-Clicking Fullorama's icon in your browser toolbar shows whether you're off, in crop, or in stretch, and has a link to send us feedback. To change the mode, use the button in the video player.
+Clicking Fullorama's icon in your browser toolbar opens the mode picker. It shows whether the selected mode is on or off, has animated previews of Crop and Stretch, and lets you choose between them. Clicking a card selects that mode and turns it on. To turn the selected mode off, use the button in the video player.
 
 ### Does Fullorama collect my data?
 
-No. It saves one thing in your browser: which mode is selected. It doesn't track what you watch, has no ads, and needs no account.
+No. It saves two things in your browser: which mode you selected and whether it's on or off. It doesn't track what you watch, has no ads, and needs no account.
 
 Feedback is optional and goes through a separate form run by Tally. It opens if you choose "Share feedback" in the toolbar popup, or after you uninstall. The form link includes the extension's version and where you opened it from. On Firefox, those two details are only sent if you've allowed the optional data permission. See the [privacy policy](https://fullorama.com/privacy) for the full details.
 
@@ -99,22 +101,32 @@ Yes, completely free and open source. The code is on GitHub under the [MIT licen
 
 ## How It Works
 
-The extension stores `cropMode` — `off`, `crop`, or `stretch` — in extension
-local storage (`chrome.storage.local` on Chrome and `browser.storage.local` on
-Firefox). Upgrading from a version that stored `cropEnabled` translates the old
-on/off value to `crop`/`off` on first load and removes the old key.
+The extension stores `fillMode` (`crop` or `stretch`) and `fillEnabled`
+(`true` or `false`) in extension local storage (`chrome.storage.local` on Chrome
+and `browser.storage.local` on Firefox). Two values are needed because the
+player can be off while still remembering which mode its button will turn back
+on. Upgrading translates the older keys on first load and removes them:
+`cropMode: "crop"` or `"stretch"` becomes that mode with fill enabled,
+`cropMode: "off"` becomes crop with fill disabled, and `cropEnabled: true` or
+`false` becomes crop enabled or disabled.
 
-A read-only toolbar popup displays the current mode by reading the stored value
-once when opened. The popup cannot change it — only the player button can. A
-tiny background script registers an uninstall survey URL so the browser can open
-the optional feedback form if you remove the extension.
+The toolbar popup is interactive. It reads the state once, renders the status
+line and the two cards (outline for selected, fill when on), and calls
+`selectMode` when a card is clicked, which selects that mode and turns fill on.
+The animated cards are CSS-only: a 21:9 box holds a 16:9 still, scaled uniformly
+by `21 ÷ 16 = 1.3125` for crop or on the X axis only for stretch, looping between
+normal and applied states. The player button calls `toggleEnabled`, so it only
+turns the selected mode off and on. A tiny background script registers an
+uninstall survey URL so the browser can open the optional feedback form if you
+remove the extension.
 
-When a mode is active, the content script adds a class to YouTube's
-`#movie_player` element and sets CSS variables from the current player and video
-aspect ratios. Crop scales both axes by the same amount and clips the overflow,
-so the picture fills the player without changing shape. Stretch scales only the
-shorter axis, so the picture fills the player but changes shape. `content.css`
-applies both transforms from the center.
+When enabled, the content script passes the on/off state and mode to the
+renderer, which adds a class to YouTube's `#movie_player` element and sets CSS
+variables from the current player and video aspect ratios. Crop scales both axes
+by the same amount and clips the overflow, so the picture fills the player
+without changing shape. Stretch scales only the shorter axis, so the picture
+fills the player but changes shape. `content.css` applies both transforms from
+the center.
 
 YouTube rebuilds parts of its player during normal navigation, so the extension
 uses YouTube navigation events, a controls-scoped `MutationObserver`, a

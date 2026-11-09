@@ -16,11 +16,11 @@
   display: none;
 }
 
-.flrm-btn[data-flrm-mode="crop"] .flrm-crop {
+.flrm-btn[aria-pressed="true"][data-flrm-mode="crop"] .flrm-crop {
   display: block;
 }
 
-.flrm-btn[data-flrm-mode="stretch"] .flrm-stretch {
+.flrm-btn[aria-pressed="true"][data-flrm-mode="stretch"] .flrm-stretch {
   display: block;
 }
 

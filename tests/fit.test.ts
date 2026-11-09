@@ -44,7 +44,7 @@ function createPlayer(
 }
 
 describe('applyFit', () => {
-    it('clears crop and stretch state when off', () => {
+    it('clears crop and stretch state when disabled', () => {
         const { player, classes, styles } = createPlayer();
         classes.add('flrm-crop-on');
         classes.add('flrm-stretch-on');
@@ -52,7 +52,7 @@ describe('applyFit', () => {
         styles.set('--flrm-scale-x', '1.5');
         styles.set('--flrm-scale-y', '1.5');
 
-        applyFit(player, 'off');
+        applyFit(player, false, 'stretch');
 
         expect(classes.has('flrm-crop-on')).toBe(false);
         expect(classes.has('flrm-stretch-on')).toBe(false);
@@ -64,7 +64,7 @@ describe('applyFit', () => {
     it('applies a uniform scale in crop mode', () => {
         const { player, classes, styles } = createPlayer();
 
-        applyFit(player, 'crop');
+        applyFit(player, true, 'crop');
 
         expect(classes.has('flrm-crop-on')).toBe(true);
         expect(classes.has('flrm-stretch-on')).toBe(false);
@@ -78,7 +78,7 @@ describe('applyFit', () => {
         classes.add('flrm-crop-on');
         styles.set('--flrm-scale', '1.5');
 
-        applyFit(player, 'stretch');
+        applyFit(player, true, 'stretch');
 
         expect(classes.has('flrm-stretch-on')).toBe(true);
         expect(classes.has('flrm-crop-on')).toBe(false);
@@ -90,7 +90,7 @@ describe('applyFit', () => {
     it('stretches vertically when the video is wider than the player', () => {
         const { player, classes, styles } = createPlayer(1440, 1080, 1920, 1080);
 
-        applyFit(player, 'stretch');
+        applyFit(player, true, 'stretch');
 
         expect(classes.has('flrm-stretch-on')).toBe(true);
         expect(styles.get('--flrm-scale-x')).toBe('1');
@@ -103,12 +103,23 @@ describe('applyFit', () => {
         styles.set('--flrm-scale-x', '1.5');
         styles.set('--flrm-scale-y', '1');
 
-        applyFit(player, 'crop');
+        applyFit(player, true, 'crop');
 
         expect(classes.has('flrm-crop-on')).toBe(true);
         expect(classes.has('flrm-stretch-on')).toBe(false);
         expect(styles.get('--flrm-scale')).toBe('1.3333');
         expect(styles.has('--flrm-scale-x')).toBe(false);
         expect(styles.has('--flrm-scale-y')).toBe(false);
+    });
+
+    it('leaves the crop applied when stretch is disabled', () => {
+        const { player, classes, styles } = createPlayer();
+        applyFit(player, true, 'crop');
+
+        applyFit(player, false, 'stretch');
+
+        expect(classes.has('flrm-crop-on')).toBe(false);
+        expect(classes.has('flrm-stretch-on')).toBe(false);
+        expect(styles.has('--flrm-scale')).toBe(false);
     });
 });

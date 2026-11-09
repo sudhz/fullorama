@@ -1,10 +1,10 @@
 /**
- * Fit — applies the active mode to #movie_player.
+ * Fit — applies the selected fill mode to #movie_player when enabled.
  * Crop zooms the video uniformly to fill; stretch scales each axis to fill.
  * The actual transforms are defined in content.css.
  */
 
-import { CropMode } from '../storage/mode';
+import { FillMode } from '../storage/mode';
 
 const CROP_CLASS = 'flrm-crop-on';
 const STRETCH_CLASS = 'flrm-stretch-on';
@@ -62,12 +62,16 @@ function round(value: number): number {
     return Math.round(value * 10000) / 10000;
 }
 
-export function applyFit(player: HTMLElement | null, mode: CropMode): void {
+export function applyFit(
+    player: HTMLElement | null,
+    enabled: boolean,
+    mode: FillMode,
+): void {
     if (!player) {
         return;
     }
 
-    if (mode === 'off') {
+    if (!enabled) {
         removeClass(player, CROP_CLASS);
         removeClass(player, STRETCH_CLASS);
         removeVar(player, SCALE_VAR);

@@ -2,19 +2,12 @@
  * Button — injects and manages the mode button in YouTube's player.
  */
 
-import { CropMode } from '../storage/mode';
-import { cycleMode, getMode } from '../storage/state';
+import { getMode, isEnabled, toggleEnabled } from '../storage/state';
 import { applyFit } from './fit';
 import { getPlayer } from './dom';
 
 const BUTTON_ATTR = 'data-flrm-btn';
 const SVG_NS = 'http://www.w3.org/2000/svg';
-
-const LABELS: Record<CropMode, string> = {
-    off: 'Fullorama: off',
-    crop: 'Fullorama: crop',
-    stretch: 'Fullorama: stretch',
-};
 
 function svgElement<T extends SVGElement>(
     tagName: string,
@@ -82,8 +75,9 @@ function createIcon(): SVGSVGElement {
 
 function syncButtonState(button: HTMLElement): void {
     const mode = getMode();
-    const label = LABELS[mode];
-    const pressed = String(mode !== 'off');
+    const enabled = isEnabled();
+    const label = `Fullorama: ${mode} ${enabled ? 'on' : 'off'}`;
+    const pressed = String(enabled);
 
     if (button.dataset.flrmMode !== mode) {
         button.dataset.flrmMode = mode;
@@ -102,9 +96,9 @@ function syncButtonState(button: HTMLElement): void {
 function onButtonClick(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
-    cycleMode();
+    toggleEnabled();
     updateButton();
-    applyFit(getPlayer(), getMode());
+    applyFit(getPlayer(), isEnabled(), getMode());
 }
 
 export function injectButton(

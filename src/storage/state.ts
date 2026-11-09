@@ -1,43 +1,78 @@
 /**
- * State — player mode persisted in extension storage.
+ * State — fill mode and on/off persisted in extension storage.
  */
 
 import { extensionApi } from '../platform/extension-api';
-import { CropMode, nextMode, parseMode } from './mode';
+import { FillMode, parseFillMode, parseLegacyMode } from './mode';
 
-export const STORAGE_KEY = 'cropMode';
-const LEGACY_STORAGE_KEY = 'cropEnabled';
+const ENABLED_KEY = 'fillEnabled';
+const MODE_KEY = 'fillMode';
+const LEGACY_CROP_MODE_KEY = 'cropMode';
+const LEGACY_CROP_ENABLED_KEY = 'cropEnabled';
 
-let mode: CropMode = 'off';
+let enabled = false;
+let mode: FillMode = 'crop';
 
-export function getMode(): CropMode {
+export function isEnabled(): boolean {
+    return enabled;
+}
+
+export function getMode(): FillMode {
     return mode;
 }
 
-function setMode(next: CropMode): void {
-    mode = next;
-    extensionApi.storage.local.set({ [STORAGE_KEY]: next });
+function save(): void {
+    extensionApi.storage.local.set({
+        [ENABLED_KEY]: enabled,
+        [MODE_KEY]: mode,
+    });
 }
 
 export async function loadState(): Promise<void> {
     const result = await extensionApi.storage.local.get([
-        STORAGE_KEY,
-        LEGACY_STORAGE_KEY,
+        ENABLED_KEY,
+        MODE_KEY,
+        LEGACY_CROP_MODE_KEY,
+        LEGACY_CROP_ENABLED_KEY,
     ]);
 
-    const stored = parseMode(result[STORAGE_KEY]);
-    if (stored) {
-        mode = stored;
+    const storedEnabled = result[ENABLED_KEY];
+    const storedMode = parseFillMode(result[MODE_KEY]);
+
+    if (typeof storedEnabled === 'boolean' && storedMode) {
+        enabled = storedEnabled;
+        mode = storedMode;
         return;
     }
 
-    mode = result[LEGACY_STORAGE_KEY] === true ? 'crop' : 'off';
-    await extensionApi.storage.local.set({ [STORAGE_KEY]: mode });
-    await extensionApi.storage.local.remove(LEGACY_STORAGE_KEY);
+    const legacyMode = parseLegacyMode(result[LEGACY_CROP_MODE_KEY]);
+    if (legacyMode) {
+        enabled = legacyMode !== 'off';
+        mode = legacyMode === 'stretch' ? 'stretch' : 'crop';
+    } else {
+        enabled = result[LEGACY_CROP_ENABLED_KEY] === true;
+        mode = 'crop';
+    }
+
+    await extensionApi.storage.local.set({
+        [ENABLED_KEY]: enabled,
+        [MODE_KEY]: mode,
+    });
+    await extensionApi.storage.local.remove([
+        LEGACY_CROP_MODE_KEY,
+        LEGACY_CROP_ENABLED_KEY,
+    ]);
 }
 
-export function cycleMode(): void {
-    setMode(nextMode(mode));
+export function selectMode(next: FillMode): void {
+    mode = next;
+    enabled = true;
+    save();
+}
+
+export function toggleEnabled(): void {
+    enabled = !enabled;
+    save();
 }
 
 export function onStorageChange(
@@ -47,13 +82,28 @@ export function onStorageChange(
         if (area !== 'local') {
             return;
         }
-        const change = changes[STORAGE_KEY];
-        if (change) {
-            const next = parseMode(change.newValue) ?? 'off';
-            if (mode === next) {
-                return;
+
+        let changed = false;
+
+        const enabledChange = changes[ENABLED_KEY];
+        if (enabledChange) {
+            const next = enabledChange.newValue === true;
+            if (next !== enabled) {
+                enabled = next;
+                changed = true;
             }
-            mode = next;
+        }
+
+        const modeChange = changes[MODE_KEY];
+        if (modeChange) {
+            const next = parseFillMode(modeChange.newValue);
+            if (next && next !== mode) {
+                mode = next;
+                changed = true;
+            }
+        }
+
+        if (changed) {
             cb();
         }
     });
