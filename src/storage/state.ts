@@ -1,29 +1,43 @@
 /**
- * State — crop on/off persisted in extension storage.
+ * State — player mode persisted in extension storage.
  */
 
 import { extensionApi } from '../platform/extension-api';
+import { CropMode, nextMode, parseMode } from './mode';
 
-export const STORAGE_KEY = 'cropEnabled';
+export const STORAGE_KEY = 'cropMode';
+const LEGACY_STORAGE_KEY = 'cropEnabled';
 
-let cropEnabled = false;
+let mode: CropMode = 'off';
 
-export function isEnabled(): boolean {
-    return cropEnabled;
+export function getMode(): CropMode {
+    return mode;
+}
+
+function setMode(next: CropMode): void {
+    mode = next;
+    extensionApi.storage.local.set({ [STORAGE_KEY]: next });
 }
 
 export async function loadState(): Promise<void> {
-    const result = await extensionApi.storage.local.get(STORAGE_KEY);
-    cropEnabled = result[STORAGE_KEY] === true;
+    const result = await extensionApi.storage.local.get([
+        STORAGE_KEY,
+        LEGACY_STORAGE_KEY,
+    ]);
+
+    const stored = parseMode(result[STORAGE_KEY]);
+    if (stored) {
+        mode = stored;
+        return;
+    }
+
+    mode = result[LEGACY_STORAGE_KEY] === true ? 'crop' : 'off';
+    await extensionApi.storage.local.set({ [STORAGE_KEY]: mode });
+    await extensionApi.storage.local.remove(LEGACY_STORAGE_KEY);
 }
 
-function saveState(): void {
-    extensionApi.storage.local.set({ [STORAGE_KEY]: cropEnabled });
-}
-
-export function toggleCrop(): void {
-    cropEnabled = !cropEnabled;
-    saveState();
+export function cycleMode(): void {
+    setMode(nextMode(mode));
 }
 
 export function onStorageChange(
@@ -35,11 +49,11 @@ export function onStorageChange(
         }
         const change = changes[STORAGE_KEY];
         if (change) {
-            const nextEnabled = change.newValue === true;
-            if (cropEnabled === nextEnabled) {
+            const next = parseMode(change.newValue) ?? 'off';
+            if (mode === next) {
                 return;
             }
-            cropEnabled = nextEnabled;
+            mode = next;
             cb();
         }
     });

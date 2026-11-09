@@ -1,14 +1,15 @@
 /**
- * Popup entrypoint — read-only crop status display.
+ * Popup entrypoint — read-only mode status display.
  *
- * Reads `cropEnabled` from storage.local once when opened and reflects it.
- * It never writes state: the only way to toggle crop is the YouTube player
- * button. The popup closes when focus returns to YouTube, so a live
+ * Reads `cropMode` from storage.local once when opened and reflects it.
+ * It never writes state: the only way to change the mode is the YouTube
+ * player button. The popup closes when focus returns to YouTube, so a live
  * storage listener provides no practical benefit.
  */
 
 import { canSendFeedbackMetadata, extensionApi } from '../platform/extension-api';
 import { STORAGE_KEY } from '../storage/state';
+import { CropMode, parseMode } from '../storage/mode';
 import { buildFeedbackUrl, FEEDBACK_URL } from '../feedback';
 
 declare const TARGET_BROWSER: 'chrome' | 'firefox';
@@ -16,6 +17,12 @@ declare const TARGET_BROWSER: 'chrome' | 'firefox';
 const feedbackSource = TARGET_BROWSER === 'firefox'
     ? 'firefox-popup'
     : 'chrome-popup';
+
+const STATUS: Record<CropMode, { text: string; stateClass: string }> = {
+    off: { text: 'Off', stateClass: 'is-off' },
+    crop: { text: 'Crop is on', stateClass: 'is-on' },
+    stretch: { text: 'Stretch is on', stateClass: 'is-on' },
+};
 
 function setStatus(text: string, stateClass: string): void {
     const status = document.getElementById('status');
@@ -45,11 +52,9 @@ async function init(): Promise<void> {
 
     try {
         const result = await extensionApi.storage.local.get(STORAGE_KEY);
-        if (result[STORAGE_KEY] === true) {
-            setStatus('Crop is on', 'is-on');
-        } else {
-            setStatus('Crop is off', 'is-off');
-        }
+        const mode = parseMode(result[STORAGE_KEY]) ?? 'off';
+        const status = STATUS[mode];
+        setStatus(status.text, status.stateClass);
     } catch {
         setStatus('Status unavailable', 'is-unavailable');
     }

@@ -1,18 +1,19 @@
 /**
  * Fullorama for YouTube™
  *
- * Adds a crop button to the YouTube player that zooms the video to fill
- * the player, removing letterboxing. The toggle persists in
- * chrome.storage.local across videos, refreshes, and navigation.
+ * Adds a mode button to the YouTube player that cycles through off, crop,
+ * and stretch. Crop zooms the video to fill the player; stretch scales it
+ * to fill. The mode persists in chrome.storage.local across videos,
+ * refreshes, and navigation.
  */
 
-import { loadState, onStorageChange } from './storage/state';
+import { getMode, loadState, onStorageChange } from './storage/state';
 import { updateButton } from './player/button';
-import { applyCrop } from './player/crop';
+import { applyFit } from './player/fit';
 import { getPlayer } from './player/dom';
 import {
-    applyCropAndSync,
-    applyCropNow,
+    applyFitAndSync,
+    applyFitNow,
     onVideoMetadata,
     resetObserver,
     retryBurst,
@@ -24,12 +25,12 @@ async function init(): Promise<void> {
     // Sync from other tabs
     onStorageChange(() => {
         updateButton();
-        applyCrop(getPlayer());
+        applyFit(getPlayer(), getMode());
     });
 
     // Apply crop immediately on resize and fullscreen
-    window.addEventListener('resize', applyCropNow, { passive: true });
-    document.addEventListener('fullscreenchange', applyCropAndSync);
+    window.addEventListener('resize', applyFitNow, { passive: true });
+    document.addEventListener('fullscreenchange', applyFitAndSync);
     document.addEventListener('yt-navigate-finish', retryBurst);
     document.addEventListener('yt-navigate-start', resetObserver);
     document.addEventListener('loadedmetadata', onVideoMetadata, true);
