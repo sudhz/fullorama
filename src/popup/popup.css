@@ -182,45 +182,11 @@ body {
 }
 
 .option[data-mode="crop"] .preview-frame {
-  animation: preview-crop 5s ease-in-out infinite;
+  transform: scale(var(--preview-fill));
 }
 
 .option[data-mode="stretch"] .preview-frame {
-  animation: preview-stretch 5s ease-in-out infinite;
-}
-
-@keyframes preview-crop {
-  0%,
-  20% {
-    transform: scale(1);
-  }
-
-  30%,
-  70% {
-    transform: scale(var(--preview-fill));
-  }
-
-  80%,
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes preview-stretch {
-  0%,
-  20% {
-    transform: scaleX(1);
-  }
-
-  30%,
-  70% {
-    transform: scaleX(var(--preview-fill));
-  }
-
-  80%,
-  100% {
-    transform: scaleX(1);
-  }
+  transform: scaleX(var(--preview-fill));
 }
 
 .preview-frame {
@@ -317,18 +283,4 @@ a {
   color: var(--text);
   outline: none;
   text-decoration: underline;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .preview-frame {
-    animation: none;
-  }
-
-  .option[data-mode="crop"] .preview-frame {
-    transform: scale(var(--preview-fill));
-  }
-
-  .option[data-mode="stretch"] .preview-frame {
-    transform: scaleX(var(--preview-fill));
-  }
 }
