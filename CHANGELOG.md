@@ -14,9 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stretch mode. It fills the player by scaling the video unevenly on the
   shorter axis instead of trimming the edges. People who prefer seeing the
   whole frame can now choose distortion over cropping.
-- The toolbar popup now has two large selectable cards, Crop and Stretch, each
-  with an animated preview of a 21:9 player. The previews loop between normal
-  and the mode applied, so the difference is visible before choosing.
+- The toolbar popup is redesigned around an `Original` frame and two result
+  cards, Crop and Stretch. The header reports the current state, a branching
+  connector leads from the original to the results, and the selected card gets
+  a white outline, a filled radio, and a short mirrored reflection.
+- The card previews are static: each shows its mode already applied. Crop is
+  zoomed in and clipped; stretch is widened without clipping.
 - The popup reports the selected mode and whether it is on:
   `Crop is off`, `Crop is on`, `Stretch is off`, `Stretch is on`.
 
@@ -27,9 +30,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   selector; the player button is the only off switch.
 - Clicking a popup card selects that mode and turns it on. Clicking the active
   card keeps it on.
-- The selected card is outlined; it fills in when the mode is on. The player
-  icon still distinguishes the active mode: a small square for crop, a wide bar
-  for stretch, and only while the selected mode is on.
+- The selected card is white-outlined with a filled radio, and the header
+  status says whether it is on. The player icon still distinguishes the active
+  mode: a small square for crop, a wide bar for stretch, and only while it is
+  on.
+- The popup is 360 px wide. The footer keeps only Share feedback and the
+  version; the "Built by" line and View source link are removed.
 - The popup is interactive instead of read-only.
 - State is stored as `fillMode` (`crop` or `stretch`) and `fillEnabled`
   (`true` or `false`) instead of a single `cropMode` tri-state or the older
@@ -99,21 +105,19 @@ and why the popup can change modes without a separate toggle.
   it inside the player. On a live page the video was 649×365 at `left: 68px`
   inside a 784×365 player, and its `.html5-video-container` had zero height, so
   percentage sizing is unreliable.
-- `src/popup/popup.html` — adds the two mode cards between the status line and
-  the feedback link. Each card is a button with a decorative 21:9 preview and a
-  visible Crop/Stretch label.
-- `src/popup/popup.css` — two equal card columns that can shrink below the
-  image's intrinsic width (`minmax(0, 1fr)` plus `min-width: 0`). At the 300 px
-  popup width this yields 129 px cards and 48.7 px previews. Selected is an
-  accent outline; on is an accent-tinted fill. The preview starts as a 16:9
-  image centred in a 21:9 box, so it has side bars. Crop scales both axes by
-  `21 ÷ 16 = 1.3125`; stretch scales only X by the same amount. Both run the
-  same 5-second loop: hold normal, transition, hold applied, transition back.
-  `prefers-reduced-motion: reduce` removes the animation and holds each card in
-  its applied state so the preview still explains the mode.
-- `src/popup/popup.ts` — loads shared state, renders the status text and card
-  classes, and calls `selectMode` on a card click. `aria-pressed` marks the
-  selected mode; the status line and fill treatment communicate on/off.
+- `src/popup/popup.html` — a header with the Fullorama lockup and status, an
+  `Original` preview, a branching connector, two result-card buttons with radio
+  controls and two-line captions, and a footer with feedback and version.
+- `src/popup/popup.css` — a 360 px popup with 20 px padding, two equal
+  `minmax(0, 1fr)` card columns at a 14 px gap, and 21:9 previews holding a 16:9
+  still. Crop scales both axes by `21 ÷ 16 = 1.3125`; stretch scales only X by
+  the same amount, so each card shows its mode already applied. The selected
+  card uses a white outline with a gap, a filled radio, and a clipped, masked
+  mirror under the preview that works in both Chromium and Firefox. No
+  animation or reduced-motion branch is needed.
+- `src/popup/popup.ts` — loads shared state, renders the header status and the
+  selected card, and calls `selectMode` on a card click. `aria-pressed` marks
+  the selected mode; the header status communicates on/off.
 - `src/sync/sync.ts`, `src/index.ts` — pass `isEnabled()` and `getMode()` to
   `applyFit`. The navigation, mutation, resize, metadata, fullscreen, and retry
   logic is unchanged; that is what keeps the selected mode and on/off state
@@ -122,7 +126,8 @@ and why the popup can change modes without a separate toggle.
 - `package.json` — version 1.3.1. The build reads it and writes it into both
   generated manifests.
 - `README.md` — documents choosing a mode in the popup, toggling it from the
-  player button, the previews, the two storage keys, and the migration path.
+  player button, the original/result previews, the two storage keys, and the
+  migration path.
 
 **Upgrade path:** no action is required from users. On first load the extension
 translates the first key it finds and removes the legacy keys:
@@ -143,8 +148,8 @@ the popup.
 **Testing:** `bun run test` covers mode parsing, both migration chains,
 `selectMode`/`toggleEnabled`, the renderer's class and variable transitions, and
 the presence of `preview.jpg` in both packages. The popup was rendered in a
-300 px stubbed-Chrome harness: the grid resolves to 129 px cards with 48.7 px
-previews, and the selected/on state and status text update on click. The
-stretch transform geometry was checked against a live YouTube player during
-development. `web-ext lint` reports no errors; its one warning about
+360 px stubbed-Chrome harness: the layout resolves to 320 px of content, 153 px
+cards, and 66 px previews; the header status, selected card, and radio state
+update on click; and the selected card shows its reflection. The stretch
+transform geometry was checked against a live YouTube player during development. `web-ext lint` reports no errors; its one warning about
 `strict_min_version` and Android is pre-existing.

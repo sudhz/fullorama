@@ -33,7 +33,7 @@ https://github.com/user-attachments/assets/3c62393f-5d82-4c7b-8543-0c3c0938f052
 ## Features
 
 - Choose Crop or Stretch in the toolbar popup
-- Animated previews show what each mode does
+- An Original frame and two result previews show what each mode does
 - YouTube player button turns the selected mode on or off
 - Crop mode zooms evenly to fill the player and trims the edges
 - Stretch mode fills the player without trimming, at the cost of distortion
@@ -47,7 +47,7 @@ https://github.com/user-attachments/assets/3c62393f-5d82-4c7b-8543-0c3c0938f052
 
 ### How do I watch YouTube full screen on an ultrawide monitor?
 
-Install Fullorama for [Chrome](https://chromewebstore.google.com/detail/fullorama-for-youtube/pacjdmdcmmnbpnjfhmjfgenbpedbakjg) or [Firefox](https://addons.mozilla.org/firefox/addon/fullorama/) and play any YouTube video. Click Fullorama's icon in your browser toolbar and choose Crop or Stretch from the two preview cards. Crop zooms the video in to fill the player; stretch fills it without trimming anything, at the cost of distortion. Then use the new button with four little corner brackets at the bottom-right of the player, next to the settings gear, to turn that mode on or off. A small square (crop) or wide bar (stretch) appears in the middle of the icon while it's on.
+Install Fullorama for [Chrome](https://chromewebstore.google.com/detail/fullorama-for-youtube/pacjdmdcmmnbpnjfhmjfgenbpedbakjg) or [Firefox](https://addons.mozilla.org/firefox/addon/fullorama/) and play any YouTube video. Click Fullorama's icon in your browser toolbar and choose Crop or Stretch from the two result cards under the Original frame. Crop zooms the video in to fill the player; stretch fills it without trimming anything, at the cost of distortion. Then use the new button with four little corner brackets at the bottom-right of the player, next to the settings gear, to turn that mode on or off. A small square (crop) or wide bar (stretch) appears in the middle of the icon while it's on.
 
 ### I can't find the button. Where is it?
 
@@ -87,7 +87,7 @@ It just scales the video that's already playing, so it doesn't change the video'
 
 ### What's the toolbar icon for?
 
-Clicking Fullorama's icon in your browser toolbar opens the mode picker. It shows whether the selected mode is on or off, has animated previews of Crop and Stretch, and lets you choose between them. Clicking a card selects that mode and turns it on. To turn the selected mode off, use the button in the video player.
+Clicking Fullorama's icon in your browser toolbar opens the mode picker. It shows whether the selected mode is on or off, alongside an Original frame and the two results: Crop keeps the shape and cuts off the edges; Stretch shows everything and pulls the video to fit. Clicking a card selects that mode and turns it on. To turn the selected mode off, use the button in the video player.
 
 ### Does Fullorama collect my data?
 
@@ -110,15 +110,17 @@ on. Upgrading translates the older keys on first load and removes them:
 `cropMode: "off"` becomes crop with fill disabled, and `cropEnabled: true` or
 `false` becomes crop enabled or disabled.
 
-The toolbar popup is interactive. It reads the state once, renders the status
-line and the two cards (outline for selected, fill when on), and calls
-`selectMode` when a card is clicked, which selects that mode and turns fill on.
-The animated cards are CSS-only: a 21:9 box holds a 16:9 still, scaled uniformly
-by `21 ÷ 16 = 1.3125` for crop or on the X axis only for stretch, looping between
-normal and applied states. The player button calls `toggleEnabled`, so it only
-turns the selected mode off and on. A tiny background script registers an
-uninstall survey URL so the browser can open the optional feedback form if you
-remove the extension.
+The toolbar popup is interactive. It reads the state once, renders the status in
+the header (`Crop is off`, `Crop is on`, `Stretch is off`, `Stretch is on`), and
+outlines the selected card with a filled radio button. A static `Original`
+preview sits above a branching connector; the two result cards show each mode
+already applied. They are CSS-only: a 21:9 box holds a 16:9 still, scaled
+uniformly by `21 ÷ 16 = 1.3125` for crop or on the X axis only for stretch.
+Each selected card adds a short mirrored reflection under its preview. Clicking
+a card calls `selectMode`, which selects that mode and turns fill on. The player
+button calls `toggleEnabled`, so it only turns the selected mode off and on. A
+tiny background script registers an uninstall survey URL so the browser can open
+the optional feedback form if you remove the extension.
 
 When enabled, the content script passes the on/off state and mode to the
 renderer, which adds a class to YouTube's `#movie_player` element and sets CSS

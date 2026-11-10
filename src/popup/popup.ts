@@ -38,10 +38,9 @@ function render(): void {
         enabled ? 'is-on' : 'is-off',
     );
 
-    for (const card of document.querySelectorAll<HTMLButtonElement>('.mode')) {
+    for (const card of document.querySelectorAll<HTMLButtonElement>('.option')) {
         const selected = card.dataset.mode === mode;
         card.classList.toggle('is-selected', selected);
-        card.classList.toggle('is-on', selected && enabled);
         card.setAttribute('aria-pressed', String(selected));
     }
 }
@@ -69,7 +68,7 @@ async function init(): Promise<void> {
             : FEEDBACK_URL;
     }
 
-    for (const card of document.querySelectorAll<HTMLButtonElement>('.mode')) {
+    for (const card of document.querySelectorAll<HTMLButtonElement>('.option')) {
         card.addEventListener('click', onModeClick);
     }
 
