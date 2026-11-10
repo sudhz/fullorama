@@ -18,8 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   cards, Crop and Stretch. The header reports the current state, a branching
   connector leads from the original to the results, and the selected card gets
   a white outline, a filled radio, and a short mirrored reflection.
-- The card previews are static: each shows its mode already applied. Crop is
-  zoomed in and clipped; stretch is widened without clipping.
+- The card previews loop between normal and the mode applied. Crop zooms in and
+  clips; stretch widens without clipping. The Original frame above stays still.
 - The popup reports the selected mode and whether it is on:
   `Crop is off`, `Crop is on`, `Stretch is off`, `Stretch is on`.
 
@@ -111,10 +111,11 @@ and why the popup can change modes without a separate toggle.
 - `src/popup/popup.css` — a 360 px popup with 20 px padding, two equal
   `minmax(0, 1fr)` card columns at a 14 px gap, and 21:9 previews holding a 16:9
   still. Crop scales both axes by `21 ÷ 16 = 1.3125`; stretch scales only X by
-  the same amount, so each card shows its mode already applied. The selected
-  card uses a white outline with a gap, a filled radio, and a clipped, masked
-  mirror under the preview that works in both Chromium and Firefox. No
-  animation or reduced-motion branch is needed.
+  the same amount. Both run the same 5-second loop: hold normal, transition,
+  hold applied, transition back. The selected card uses a white outline with a
+  gap, a filled radio, and a clipped, masked mirror under the preview that works
+  in both Chromium and Firefox. `prefers-reduced-motion: reduce` removes the
+  animation and holds each card in its applied state.
 - `src/popup/popup.ts` — loads shared state, renders the header status and the
   selected card, and calls `selectMode` on a card click. `aria-pressed` marks
   the selected mode; the header status communicates on/off.
@@ -150,6 +151,7 @@ the popup.
 the presence of `preview.jpg` in both packages. The popup was rendered in a
 360 px stubbed-Chrome harness: the layout resolves to 320 px of content, 153 px
 cards, and 66 px previews; the header status, selected card, and radio state
-update on click; and the selected card shows its reflection. The stretch
-transform geometry was checked against a live YouTube player during development. `web-ext lint` reports no errors; its one warning about
+update on click; and the selected card shows its reflection. The previews loop
+and hold the applied state under reduced motion. The stretch transform geometry
+was checked against a live YouTube player during development. `web-ext lint` reports no errors; its one warning about
 `strict_min_version` and Android is pre-existing.

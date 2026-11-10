@@ -33,7 +33,7 @@ https://github.com/user-attachments/assets/3c62393f-5d82-4c7b-8543-0c3c0938f052
 ## Features
 
 - Choose Crop or Stretch in the toolbar popup
-- An Original frame and two result previews show what each mode does
+- An Original frame and two looping result previews show what each mode does
 - YouTube player button turns the selected mode on or off
 - Crop mode zooms evenly to fill the player and trims the edges
 - Stretch mode fills the player without trimming, at the cost of distortion
@@ -113,14 +113,16 @@ on. Upgrading translates the older keys on first load and removes them:
 The toolbar popup is interactive. It reads the state once, renders the status in
 the header (`Crop is off`, `Crop is on`, `Stretch is off`, `Stretch is on`), and
 outlines the selected card with a filled radio button. A static `Original`
-preview sits above a branching connector; the two result cards show each mode
-already applied. They are CSS-only: a 21:9 box holds a 16:9 still, scaled
-uniformly by `21 ÷ 16 = 1.3125` for crop or on the X axis only for stretch.
-Each selected card adds a short mirrored reflection under its preview. Clicking
-a card calls `selectMode`, which selects that mode and turns fill on. The player
-button calls `toggleEnabled`, so it only turns the selected mode off and on. A
-tiny background script registers an uninstall survey URL so the browser can open
-the optional feedback form if you remove the extension.
+preview sits above a branching connector; the two result cards loop between
+normal and the mode applied. They are CSS-only: a 21:9 box holds a 16:9 still,
+scaled uniformly by `21 ÷ 16 = 1.3125` for crop or on the X axis only for
+stretch, on the same 5-second loop. Under reduced motion the loop is removed and
+each card holds its applied state. Each selected card adds a short mirrored
+reflection under its preview. Clicking a card calls `selectMode`, which selects
+that mode and turns fill on. The player button calls `toggleEnabled`, so it only
+turns the selected mode off and on. A tiny background script registers an
+uninstall survey URL so the browser can open the optional feedback form if you
+remove the extension.
 
 When enabled, the content script passes the on/off state and mode to the
 renderer, which adds a class to YouTube's `#movie_player` element and sets CSS
