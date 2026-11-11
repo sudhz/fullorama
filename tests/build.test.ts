@@ -98,6 +98,11 @@ describe('generated build output', () => {
         expect(popup).not.toContain('firefox-popup');
     });
 
+    it('packages the popup preview image', () => {
+        expect(existsSync(join('dist-chrome', 'preview.jpg'))).toBe(true);
+        expect(existsSync(join('dist-firefox', 'preview.jpg'))).toBe(true);
+    });
+
     it('Firefox popup.js contains firefox-popup source', () => {
         const popup = readFileSync(join('dist-firefox', 'popup.js'), 'utf8');
         expect(popup).toContain('firefox-popup');

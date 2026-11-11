@@ -1,14 +1,9 @@
 /**
- * Popup entrypoint — read-only crop status display.
- *
- * Reads `cropEnabled` from storage.local once when opened and reflects it.
- * It never writes state: the only way to toggle crop is the YouTube player
- * button. The popup closes when focus returns to YouTube, so a live
- * storage listener provides no practical benefit.
+ * Popup entrypoint — selects the fill mode and turns it on.
  */
 
 import { canSendFeedbackMetadata, extensionApi } from '../platform/extension-api';
-import { STORAGE_KEY } from '../storage/state';
+import { FillMode, getMode, isEnabled, loadState, selectMode } from '../storage/state';
 import { buildFeedbackUrl, FEEDBACK_URL } from '../feedback';
 
 declare const TARGET_BROWSER: 'chrome' | 'firefox';
@@ -16,6 +11,11 @@ declare const TARGET_BROWSER: 'chrome' | 'firefox';
 const feedbackSource = TARGET_BROWSER === 'firefox'
     ? 'firefox-popup'
     : 'chrome-popup';
+
+const LABELS: Record<FillMode, string> = {
+    crop: 'Crop',
+    stretch: 'Stretch',
+};
 
 function setStatus(text: string, stateClass: string): void {
     const status = document.getElementById('status');
@@ -26,6 +26,30 @@ function setStatus(text: string, stateClass: string): void {
     statusText.textContent = text;
     status.classList.remove('is-on', 'is-off', 'is-unavailable');
     status.classList.add(stateClass);
+}
+
+function render(): void {
+    const mode = getMode();
+    const enabled = isEnabled();
+
+    setStatus(
+        `${LABELS[mode]} is ${enabled ? 'on' : 'off'}`,
+        enabled ? 'is-on' : 'is-off',
+    );
+
+    for (const card of document.querySelectorAll<HTMLButtonElement>('.option')) {
+        const selected = card.dataset.mode === mode;
+        card.classList.toggle('is-selected', selected);
+        card.setAttribute('aria-pressed', String(selected));
+    }
+}
+
+function onModeClick(event: Event): void {
+    const mode = (event.currentTarget as HTMLElement).dataset.mode;
+    if (mode === 'crop' || mode === 'stretch') {
+        selectMode(mode);
+        render();
+    }
 }
 
 async function init(): Promise<void> {
@@ -43,13 +67,13 @@ async function init(): Promise<void> {
             : FEEDBACK_URL;
     }
 
+    for (const card of document.querySelectorAll<HTMLButtonElement>('.option')) {
+        card.addEventListener('click', onModeClick);
+    }
+
     try {
-        const result = await extensionApi.storage.local.get(STORAGE_KEY);
-        if (result[STORAGE_KEY] === true) {
-            setStatus('Crop is on', 'is-on');
-        } else {
-            setStatus('Crop is off', 'is-off');
-        }
+        await loadState();
+        render();
     } catch {
         setStatus('Status unavailable', 'is-unavailable');
     }

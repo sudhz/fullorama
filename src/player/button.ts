@@ -1,9 +1,9 @@
 /**
- * Button — injects and manages the crop toggle button in YouTube's player.
+ * Button — injects and manages the mode button in YouTube's player.
  */
 
-import { isEnabled, toggleCrop } from '../storage/state';
-import { applyCrop } from './crop';
+import { getMode, isEnabled, toggleEnabled } from '../storage/state';
+import { applyFill } from './fill';
 import { getPlayer } from './dom';
 
 const BUTTON_ATTR = 'data-flrm-btn';
@@ -49,11 +49,21 @@ function createIcon(): SVGSVGElement {
     svg.append(
         group,
         svgElement<SVGRectElement>('rect', {
-            class: 'flrm-on',
+            class: 'flrm-crop',
             x: '13',
             y: '13',
             width: '10',
             height: '10',
+            rx: '1',
+            fill: 'currentColor',
+            stroke: 'none',
+        }),
+        svgElement<SVGRectElement>('rect', {
+            class: 'flrm-stretch',
+            x: '10',
+            y: '15',
+            width: '16',
+            height: '6',
             rx: '1',
             fill: 'currentColor',
             stroke: 'none',
@@ -63,12 +73,32 @@ function createIcon(): SVGSVGElement {
     return svg;
 }
 
+function syncButtonState(button: HTMLElement): void {
+    const mode = getMode();
+    const enabled = isEnabled();
+    const label = `Fullorama: ${mode} ${enabled ? 'on' : 'off'}`;
+    const pressed = String(enabled);
+
+    if (button.dataset.flrmMode !== mode) {
+        button.dataset.flrmMode = mode;
+    }
+    if (button.title !== label) {
+        button.title = label;
+    }
+    if (button.getAttribute('aria-label') !== label) {
+        button.setAttribute('aria-label', label);
+    }
+    if (button.getAttribute('aria-pressed') !== pressed) {
+        button.setAttribute('aria-pressed', pressed);
+    }
+}
+
 function onButtonClick(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
-    toggleCrop();
+    toggleEnabled();
     updateButton();
-    applyCrop(getPlayer());
+    applyFill(getPlayer());
 }
 
 export function injectButton(
@@ -82,12 +112,9 @@ export function injectButton(
     const button = document.createElement('button');
     button.setAttribute(BUTTON_ATTR, '');
     button.className = 'ytp-button flrm-btn';
-    button.title = 'Fullorama crop';
-    button.setAttribute('aria-label', 'Fullorama crop');
-    button.setAttribute('aria-pressed', String(isEnabled()));
     button.append(createIcon());
-
     button.addEventListener('click', onButtonClick);
+    syncButtonState(button);
 
     controls.insertBefore(
         button,
@@ -99,11 +126,7 @@ export function updateButton(): void {
     const btn = document.querySelector<HTMLElement>(
         '#movie_player [' + BUTTON_ATTR + ']',
     );
-    if (!btn) {
-        return;
-    }
-    const pressed = String(isEnabled());
-    if (btn.getAttribute('aria-pressed') !== pressed) {
-        btn.setAttribute('aria-pressed', pressed);
+    if (btn) {
+        syncButtonState(btn);
     }
 }

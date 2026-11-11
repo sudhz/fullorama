@@ -11,15 +11,24 @@
   display: block;
 }
 
-.flrm-btn[aria-pressed="false"] .flrm-on {
+.flrm-btn .flrm-crop,
+.flrm-btn .flrm-stretch {
   display: none;
 }
 
-#movie_player.flrm-crop-on {
+.flrm-btn[aria-pressed="true"][data-flrm-mode="crop"] .flrm-crop {
+  display: block;
+}
+
+.flrm-btn[aria-pressed="true"][data-flrm-mode="stretch"] .flrm-stretch {
+  display: block;
+}
+
+#movie_player.flrm-fill-on {
   overflow: hidden !important;
 }
 
-#movie_player.flrm-crop-on video.html5-main-video {
-  transform: scale(var(--flrm-scale, 1)) !important;
+#movie_player.flrm-fill-on video.html5-main-video {
+  transform: scale(var(--flrm-scale-x, 1), var(--flrm-scale-y, 1)) !important;
   transform-origin: center center !important;
 }

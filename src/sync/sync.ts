@@ -1,9 +1,9 @@
 /**
- * Sync — debounced re-injection and re-apply of button + crop.
+ * Sync — debounced re-injection and re-apply of button + fill.
  * Watches for YouTube DOM changes, navigation events, and player resizes.
  */
 
-import { applyCrop } from '../player/crop';
+import { applyFill } from '../player/fill';
 import { injectButton } from '../player/button';
 import { getPlayer, getControls } from '../player/dom';
 
@@ -47,7 +47,7 @@ function observePlayer(player: HTMLElement | null): void {
         return;
     }
 
-    playerObserver = new ResizeObserver(applyCropNow);
+    playerObserver = new ResizeObserver(applyFillNow);
     playerObserver.observe(player);
 }
 
@@ -59,7 +59,7 @@ function sync(): void {
     if (player && controls) {
         injectButton(player, controls);
     }
-    applyCrop(player);
+    applyFill(player);
 }
 
 export function scheduleSync(): void {
@@ -109,11 +109,11 @@ export function onVideoMetadata(event: Event): void {
     }
 }
 
-export function applyCropNow(): void {
-    applyCrop(getPlayer());
+export function applyFillNow(): void {
+    applyFill(getPlayer());
 }
 
-export function applyCropAndSync(): void {
-    applyCrop(getPlayer());
+export function applyFillAndSync(): void {
+    applyFill(getPlayer());
     scheduleSync();
 }
