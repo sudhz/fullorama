@@ -7,13 +7,13 @@
  * chrome.storage.local across videos, refreshes, and navigation.
  */
 
-import { getMode, isEnabled, loadState, onStorageChange } from './storage/state';
+import { loadState, onStorageChange } from './storage/state';
 import { updateButton } from './player/button';
-import { applyFit } from './player/fit';
+import { applyFill } from './player/fill';
 import { getPlayer } from './player/dom';
 import {
-    applyFitAndSync,
-    applyFitNow,
+    applyFillAndSync,
+    applyFillNow,
     onVideoMetadata,
     resetObserver,
     retryBurst,
@@ -25,12 +25,12 @@ async function init(): Promise<void> {
     // Sync from other tabs
     onStorageChange(() => {
         updateButton();
-        applyFit(getPlayer(), isEnabled(), getMode());
+        applyFill(getPlayer());
     });
 
     // Apply the selected mode immediately on resize and fullscreen
-    window.addEventListener('resize', applyFitNow, { passive: true });
-    document.addEventListener('fullscreenchange', applyFitAndSync);
+    window.addEventListener('resize', applyFillNow, { passive: true });
+    document.addEventListener('fullscreenchange', applyFillAndSync);
     document.addEventListener('yt-navigate-finish', retryBurst);
     document.addEventListener('yt-navigate-start', resetObserver);
     document.addEventListener('loadedmetadata', onVideoMetadata, true);

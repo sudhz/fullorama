@@ -24,20 +24,11 @@
   display: block;
 }
 
-#movie_player.flrm-crop-on {
+#movie_player.flrm-fill-on {
   overflow: hidden !important;
 }
 
-#movie_player.flrm-crop-on video.html5-main-video {
-  transform: scale(var(--flrm-scale, 1)) !important;
-  transform-origin: center center !important;
-}
-
-#movie_player.flrm-stretch-on {
-  overflow: hidden !important;
-}
-
-#movie_player.flrm-stretch-on video.html5-main-video {
+#movie_player.flrm-fill-on video.html5-main-video {
   transform: scale(var(--flrm-scale-x, 1), var(--flrm-scale-y, 1)) !important;
   transform-origin: center center !important;
 }

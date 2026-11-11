@@ -3,8 +3,7 @@
  */
 
 import { canSendFeedbackMetadata, extensionApi } from '../platform/extension-api';
-import { FillMode } from '../storage/mode';
-import { getMode, isEnabled, loadState, selectMode } from '../storage/state';
+import { FillMode, getMode, isEnabled, loadState, selectMode } from '../storage/state';
 import { buildFeedbackUrl, FEEDBACK_URL } from '../feedback';
 
 declare const TARGET_BROWSER: 'chrome' | 'firefox';

@@ -3,15 +3,19 @@
  */
 
 import { extensionApi } from '../platform/extension-api';
-import { FillMode, parseFillMode, parseLegacyMode } from './mode';
+
+export type FillMode = 'crop' | 'stretch';
 
 const ENABLED_KEY = 'fillEnabled';
 const MODE_KEY = 'fillMode';
-const LEGACY_CROP_MODE_KEY = 'cropMode';
 const LEGACY_CROP_ENABLED_KEY = 'cropEnabled';
 
 let enabled = false;
 let mode: FillMode = 'crop';
+
+function parseMode(value: unknown): FillMode | null {
+    return value === 'crop' || value === 'stretch' ? value : null;
+}
 
 export function isEnabled(): boolean {
     return enabled;
@@ -32,12 +36,11 @@ export async function loadState(): Promise<void> {
     const result = await extensionApi.storage.local.get([
         ENABLED_KEY,
         MODE_KEY,
-        LEGACY_CROP_MODE_KEY,
         LEGACY_CROP_ENABLED_KEY,
     ]);
 
     const storedEnabled = result[ENABLED_KEY];
-    const storedMode = parseFillMode(result[MODE_KEY]);
+    const storedMode = parseMode(result[MODE_KEY]);
 
     if (typeof storedEnabled === 'boolean' && storedMode) {
         enabled = storedEnabled;
@@ -45,23 +48,24 @@ export async function loadState(): Promise<void> {
         return;
     }
 
-    const legacyMode = parseLegacyMode(result[LEGACY_CROP_MODE_KEY]);
-    if (legacyMode) {
-        enabled = legacyMode !== 'off';
-        mode = legacyMode === 'stretch' ? 'stretch' : 'crop';
-    } else {
-        enabled = result[LEGACY_CROP_ENABLED_KEY] === true;
-        mode = 'crop';
+    enabled = typeof storedEnabled === 'boolean' ? storedEnabled : false;
+    mode = storedMode ?? 'crop';
+
+    // Temporary: moves the pre-1.3.0 `cropEnabled` key. Remove in the release after 1.3.0.
+    const legacyEnabled = result[LEGACY_CROP_ENABLED_KEY];
+    const migrating = typeof storedEnabled !== 'boolean' && typeof legacyEnabled === 'boolean';
+    if (migrating) {
+        enabled = legacyEnabled;
     }
 
     await extensionApi.storage.local.set({
         [ENABLED_KEY]: enabled,
         [MODE_KEY]: mode,
     });
-    await extensionApi.storage.local.remove([
-        LEGACY_CROP_MODE_KEY,
-        LEGACY_CROP_ENABLED_KEY,
-    ]);
+
+    if (migrating) {
+        await extensionApi.storage.local.remove(LEGACY_CROP_ENABLED_KEY);
+    }
 }
 
 export function selectMode(next: FillMode): void {
@@ -96,7 +100,7 @@ export function onStorageChange(
 
         const modeChange = changes[MODE_KEY];
         if (modeChange) {
-            const next = parseFillMode(modeChange.newValue);
+            const next = parseMode(modeChange.newValue);
             if (next && next !== mode) {
                 mode = next;
                 changed = true;

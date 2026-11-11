@@ -1,10 +1,9 @@
 /**
- * Sync — debounced re-injection and re-apply of button + crop.
+ * Sync — debounced re-injection and re-apply of button + fill.
  * Watches for YouTube DOM changes, navigation events, and player resizes.
  */
 
-import { getMode, isEnabled } from '../storage/state';
-import { applyFit } from '../player/fit';
+import { applyFill } from '../player/fill';
 import { injectButton } from '../player/button';
 import { getPlayer, getControls } from '../player/dom';
 
@@ -48,7 +47,7 @@ function observePlayer(player: HTMLElement | null): void {
         return;
     }
 
-    playerObserver = new ResizeObserver(applyFitNow);
+    playerObserver = new ResizeObserver(applyFillNow);
     playerObserver.observe(player);
 }
 
@@ -60,7 +59,7 @@ function sync(): void {
     if (player && controls) {
         injectButton(player, controls);
     }
-    applyFit(player, isEnabled(), getMode());
+    applyFill(player);
 }
 
 export function scheduleSync(): void {
@@ -110,11 +109,11 @@ export function onVideoMetadata(event: Event): void {
     }
 }
 
-export function applyFitNow(): void {
-    applyFit(getPlayer(), isEnabled(), getMode());
+export function applyFillNow(): void {
+    applyFill(getPlayer());
 }
 
-export function applyFitAndSync(): void {
-    applyFit(getPlayer(), isEnabled(), getMode());
+export function applyFillAndSync(): void {
+    applyFill(getPlayer());
     scheduleSync();
 }

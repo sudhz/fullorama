@@ -1,14 +1,12 @@
 /**
- * Fit — applies the selected fill mode to #movie_player when enabled.
+ * Fill — applies the selected fill mode to #movie_player when enabled.
  * Crop zooms the video uniformly to fill; stretch scales each axis to fill.
- * The actual transforms are defined in content.css.
+ * The actual transform is defined in content.css.
  */
 
-import { FillMode } from '../storage/mode';
+import { getMode, isEnabled } from '../storage/state';
 
-const CROP_CLASS = 'flrm-crop-on';
-const STRETCH_CLASS = 'flrm-stretch-on';
-const SCALE_VAR = '--flrm-scale';
+const PLAYER_CLASS = 'flrm-fill-on';
 const SCALE_X_VAR = '--flrm-scale-x';
 const SCALE_Y_VAR = '--flrm-scale-y';
 
@@ -62,19 +60,13 @@ function round(value: number): number {
     return Math.round(value * 10000) / 10000;
 }
 
-export function applyFit(
-    player: HTMLElement | null,
-    enabled: boolean,
-    mode: FillMode,
-): void {
+export function applyFill(player: HTMLElement | null): void {
     if (!player) {
         return;
     }
 
-    if (!enabled) {
-        removeClass(player, CROP_CLASS);
-        removeClass(player, STRETCH_CLASS);
-        removeVar(player, SCALE_VAR);
+    if (!isEnabled()) {
+        removeClass(player, PLAYER_CLASS);
         removeVar(player, SCALE_X_VAR);
         removeVar(player, SCALE_Y_VAR);
         return;
@@ -82,36 +74,33 @@ export function applyFit(
 
     const aspects = readAspects(player);
     if (!aspects) {
+        // The size is not known yet. Clear any previous fill so a mode change
+        // cannot leave stale geometry on the player.
+        removeClass(player, PLAYER_CLASS);
+        removeVar(player, SCALE_X_VAR);
+        removeVar(player, SCALE_Y_VAR);
         return;
     }
 
-    if (mode === 'stretch') {
-        removeClass(player, CROP_CLASS);
-        removeVar(player, SCALE_VAR);
+    let scaleX: number;
+    let scaleY: number;
 
+    if (getMode() === 'stretch') {
         const wider = aspects.player >= aspects.video;
-        const scaleX = wider ? aspects.player / aspects.video : 1;
-        const scaleY = wider ? 1 : aspects.video / aspects.player;
-
-        setVar(player, SCALE_X_VAR, String(round(scaleX)));
-        setVar(player, SCALE_Y_VAR, String(round(scaleY)));
-        if (!player.classList.contains(STRETCH_CLASS)) {
-            player.classList.add(STRETCH_CLASS);
-        }
-        return;
+        scaleX = wider ? aspects.player / aspects.video : 1;
+        scaleY = wider ? 1 : aspects.video / aspects.player;
+    } else {
+        const scale = Math.max(
+            aspects.player / aspects.video,
+            aspects.video / aspects.player,
+        );
+        scaleX = scale;
+        scaleY = scale;
     }
 
-    removeClass(player, STRETCH_CLASS);
-    removeVar(player, SCALE_X_VAR);
-    removeVar(player, SCALE_Y_VAR);
-
-    const scale = Math.max(
-        aspects.player / aspects.video,
-        aspects.video / aspects.player,
-    );
-
-    setVar(player, SCALE_VAR, String(round(scale)));
-    if (!player.classList.contains(CROP_CLASS)) {
-        player.classList.add(CROP_CLASS);
+    setVar(player, SCALE_X_VAR, String(round(scaleX)));
+    setVar(player, SCALE_Y_VAR, String(round(scaleY)));
+    if (!player.classList.contains(PLAYER_CLASS)) {
+        player.classList.add(PLAYER_CLASS);
     }
 }

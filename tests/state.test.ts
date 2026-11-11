@@ -1,39 +1,8 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
-
-type Store = Record<string, unknown>;
-
-let store: Store = {};
-let removed: string[][] = [];
-
-(globalThis as { chrome?: unknown }).chrome = {
-    storage: {
-        local: {
-            get: async (keys: string | string[]) => {
-                const list = Array.isArray(keys) ? keys : [keys];
-                return Object.fromEntries(
-                    list.filter((key) => key in store).map((key) => [key, store[key]]),
-                );
-            },
-            set: async (values: Store) => {
-                Object.assign(store, values);
-            },
-            remove: async (keys: string | string[]) => {
-                const list = Array.isArray(keys) ? keys : [keys];
-                removed.push(list);
-                for (const key of list) {
-                    delete store[key];
-                }
-            },
-        },
-        onChanged: {
-            addListener: () => {},
-        },
-    },
-};
+import { removed, resetStore, store } from './helpers/storage';
 
 beforeEach(() => {
-    store = {};
-    removed = [];
+    resetStore();
 });
 
 const state = await import('../src/storage/state');
@@ -52,62 +21,16 @@ describe('loadState', () => {
         expect(removed).toEqual([]);
     });
 
-    it('migrates the legacy tri-state crop', async () => {
-        store.cropMode = 'crop';
-
-        await state.loadState();
-
-        expect(state.getMode()).toBe('crop');
-        expect(state.isEnabled()).toBe(true);
-        expect(store.fillMode).toBe('crop');
-        expect(store.fillEnabled).toBe(true);
-        expect('cropMode' in store).toBe(false);
-    });
-
-    it('migrates the legacy tri-state stretch', async () => {
-        store.cropMode = 'stretch';
-
-        await state.loadState();
-
-        expect(state.getMode()).toBe('stretch');
-        expect(state.isEnabled()).toBe(true);
-        expect(store.fillMode).toBe('stretch');
-        expect(store.fillEnabled).toBe(true);
-        expect('cropMode' in store).toBe(false);
-    });
-
-    it('migrates the legacy tri-state off to a disabled crop', async () => {
-        store.cropMode = 'off';
-
-        await state.loadState();
-
-        expect(state.getMode()).toBe('crop');
-        expect(state.isEnabled()).toBe(false);
-        expect(store.fillMode).toBe('crop');
-        expect(store.fillEnabled).toBe(false);
-    });
-
-    it('migrates the legacy boolean on to crop on', async () => {
+    // Temporary: delete this test with the `cropEnabled` migration after 1.3.0.
+    it('migrates the pre-1.3.0 cropEnabled key', async () => {
         store.cropEnabled = true;
 
         await state.loadState();
 
         expect(state.getMode()).toBe('crop');
         expect(state.isEnabled()).toBe(true);
-        expect(store.fillMode).toBe('crop');
         expect(store.fillEnabled).toBe(true);
-        expect('cropEnabled' in store).toBe(false);
-    });
-
-    it('migrates the legacy boolean off to a disabled crop', async () => {
-        store.cropEnabled = false;
-
-        await state.loadState();
-
-        expect(state.getMode()).toBe('crop');
-        expect(state.isEnabled()).toBe(false);
         expect(store.fillMode).toBe('crop');
-        expect(store.fillEnabled).toBe(false);
         expect('cropEnabled' in store).toBe(false);
     });
 
@@ -116,21 +39,19 @@ describe('loadState', () => {
 
         expect(state.getMode()).toBe('crop');
         expect(state.isEnabled()).toBe(false);
-        expect(store.fillMode).toBe('crop');
         expect(store.fillEnabled).toBe(false);
+        expect(store.fillMode).toBe('crop');
     });
 
-    it('falls back through legacy values when the new mode is invalid', async () => {
+    it('falls back to crop when the stored mode is invalid', async () => {
         store.fillMode = 'zoom';
         store.fillEnabled = true;
-        store.cropEnabled = true;
 
         await state.loadState();
 
         expect(state.getMode()).toBe('crop');
         expect(state.isEnabled()).toBe(true);
         expect(store.fillMode).toBe('crop');
-        expect('cropEnabled' in store).toBe(false);
     });
 });
 

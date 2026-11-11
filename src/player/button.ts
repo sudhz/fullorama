@@ -3,7 +3,7 @@
  */
 
 import { getMode, isEnabled, toggleEnabled } from '../storage/state';
-import { applyFit } from './fit';
+import { applyFill } from './fill';
 import { getPlayer } from './dom';
 
 const BUTTON_ATTR = 'data-flrm-btn';
@@ -98,7 +98,7 @@ function onButtonClick(event: Event): void {
     event.stopPropagation();
     toggleEnabled();
     updateButton();
-    applyFit(getPlayer(), isEnabled(), getMode());
+    applyFill(getPlayer());
 }
 
 export function injectButton(

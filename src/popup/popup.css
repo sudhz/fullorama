@@ -167,8 +167,15 @@ body {
   border-radius: 12px;
 }
 
+.preview-wrap {
+  --preview-fill: 2.3333;
+  position: relative;
+  display: block;
+}
+
 .preview {
-  --preview-fill: 1.3125;
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -181,14 +188,6 @@ body {
   border-radius: 10px;
 }
 
-.option[data-mode="crop"] .preview-frame {
-  transform: scale(var(--preview-fill));
-}
-
-.option[data-mode="stretch"] .preview-frame {
-  transform: scaleX(var(--preview-fill));
-}
-
 .preview-frame {
   display: block;
   width: auto;
@@ -197,29 +196,99 @@ body {
   transform-origin: center center;
 }
 
+.preview-bleed {
+  --bleed: 14px;
+  position: absolute;
+  top: calc(-1 * var(--bleed));
+  right: 0;
+  bottom: calc(-1 * var(--bleed));
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 20%,
+    #000 80%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 20%,
+    #000 80%,
+    transparent
+  );
+}
+
+.preview-bleed::before {
+  content: "";
+  flex: none;
+  width: auto;
+  height: calc(100% - 2 * var(--bleed) - 2px);
+  aspect-ratio: 1;
+  background: url("preview.jpg") center / cover no-repeat;
+  transform-origin: center center;
+}
+
+.option[data-mode="crop"] .preview-bleed::before {
+  animation: preview-crop 5s ease-in-out infinite;
+}
+
+.option[data-mode="crop"].is-selected .preview-bleed {
+  opacity: 0.6;
+}
+
+.option[data-mode="crop"] .preview-frame {
+  animation: preview-crop 5s ease-in-out infinite;
+}
+
+.option[data-mode="stretch"] .preview-frame {
+  animation: preview-stretch 5s ease-in-out infinite;
+}
+
+@keyframes preview-crop {
+  0%,
+  20% {
+    transform: scale(1);
+  }
+
+  30%,
+  70% {
+    transform: scale(var(--preview-fill));
+  }
+
+  80%,
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes preview-stretch {
+  0%,
+  20% {
+    transform: scaleX(1);
+  }
+
+  30%,
+  70% {
+    transform: scaleX(var(--preview-fill));
+  }
+
+  80%,
+  100% {
+    transform: scaleX(1);
+  }
+}
+
 .option.is-selected .preview {
   border-color: transparent;
   outline: 2px solid #fff;
   outline-offset: 2px;
-}
-
-.mirror {
-  display: block;
-  height: 20px;
-  margin-top: 4px;
-  overflow: hidden;
-  opacity: 0;
-}
-
-.option.is-selected .mirror {
-  opacity: 0.6;
-  -webkit-mask-image: linear-gradient(to bottom, #000, transparent);
-  mask-image: linear-gradient(to bottom, #000, transparent);
-}
-
-.preview--mirror {
-  transform: scaleY(-1);
-  transform-origin: top center;
 }
 
 .option-body {
@@ -283,4 +352,21 @@ a {
   color: var(--text);
   outline: none;
   text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option[data-mode="crop"] .preview-frame,
+  .option[data-mode="crop"] .preview-bleed::before,
+  .option[data-mode="stretch"] .preview-frame {
+    animation: none;
+  }
+
+  .option[data-mode="crop"] .preview-frame,
+  .option[data-mode="crop"] .preview-bleed::before {
+    transform: scale(var(--preview-fill));
+  }
+
+  .option[data-mode="stretch"] .preview-frame {
+    transform: scaleX(var(--preview-fill));
+  }
 }
