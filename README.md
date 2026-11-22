@@ -125,8 +125,8 @@ bun install
 bun run dev
 ```
 
-The dev command rebuilds the JavaScript and popup CSS on save. Reload the YouTube tab to test
-changes.
+The dev command rebuilds the extension on save. Reload the YouTube tab, or
+reopen the popup, to test changes.
 
 Useful commands:
 
