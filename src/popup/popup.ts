@@ -3,7 +3,7 @@
  */
 
 import { canSendFeedbackMetadata, extensionApi } from '../platform/extension-api';
-import { FillMode, getMode, isEnabled, loadState, selectMode } from '../storage/state';
+import { getMode, isEnabled, loadState, MODE_NAMES, selectMode, statusText, toggleEnabled } from '../storage/state';
 import { buildFeedbackUrl, FEEDBACK_URL } from '../feedback';
 
 declare const TARGET_BROWSER: 'chrome' | 'firefox';
@@ -12,40 +12,31 @@ const feedbackSource = TARGET_BROWSER === 'firefox'
     ? 'firefox-popup'
     : 'chrome-popup';
 
-const LABELS: Record<FillMode, string> = {
-    crop: 'Crop',
-    stretch: 'Stretch',
-};
-
-function setStatus(text: string, stateClass: string): void {
-    const status = document.getElementById('status');
-    const statusText = document.getElementById('status-text');
-    if (!status || !statusText) {
-        return;
-    }
-    statusText.textContent = text;
-    status.classList.remove('is-on', 'is-off', 'is-unavailable');
-    status.classList.add(stateClass);
-}
+const status = document.querySelector<HTMLButtonElement>('#status');
+const statusLabel = document.getElementById('status-text');
 
 function render(): void {
     const mode = getMode();
-    const enabled = isEnabled();
 
-    setStatus(
-        `${LABELS[mode]} is ${enabled ? 'on' : 'off'}`,
-        enabled ? 'is-on' : 'is-off',
-    );
+    if (status && statusLabel) {
+        statusLabel.textContent = statusText();
+        status.setAttribute('aria-label', MODE_NAMES[mode]);
+        status.setAttribute('aria-checked', String(isEnabled()));
+        status.disabled = false;
+    }
 
-    for (const card of document.querySelectorAll<HTMLButtonElement>('.option')) {
-        const selected = card.dataset.mode === mode;
-        card.classList.toggle('is-selected', selected);
-        card.setAttribute('aria-pressed', String(selected));
+    for (const radio of document.querySelectorAll<HTMLInputElement>('input[name="mode"]')) {
+        radio.checked = radio.value === mode;
     }
 }
 
+function onStatusClick(): void {
+    toggleEnabled();
+    render();
+}
+
 function onModeClick(event: Event): void {
-    const mode = (event.currentTarget as HTMLElement).dataset.mode;
+    const mode = (event.currentTarget as HTMLInputElement).value;
     if (mode === 'crop' || mode === 'stretch') {
         selectMode(mode);
         render();
@@ -67,15 +58,18 @@ async function init(): Promise<void> {
             : FEEDBACK_URL;
     }
 
-    for (const card of document.querySelectorAll<HTMLButtonElement>('.option')) {
-        card.addEventListener('click', onModeClick);
+    for (const radio of document.querySelectorAll<HTMLInputElement>('input[name="mode"]')) {
+        radio.addEventListener('click', onModeClick);
     }
+    status?.addEventListener('click', onStatusClick);
 
     try {
         await loadState();
         render();
     } catch {
-        setStatus('Status unavailable', 'is-unavailable');
+        if (statusLabel) {
+            statusLabel.textContent = 'Status unavailable';
+        }
     }
 }
 

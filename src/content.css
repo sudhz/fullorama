@@ -11,17 +11,13 @@
   display: block;
 }
 
-.flrm-btn .flrm-crop,
-.flrm-btn .flrm-stretch {
+.flrm-btn[aria-pressed="false"] .flrm-on {
   display: none;
 }
 
-.flrm-btn[aria-pressed="true"][data-flrm-mode="crop"] .flrm-crop {
-  display: block;
-}
-
-.flrm-btn[aria-pressed="true"][data-flrm-mode="stretch"] .flrm-stretch {
-  display: block;
+/* Only one tooltip at a time: YouTube's stay hidden while ours shows */
+#movie_player:has(.flrm-tooltip:not([aria-hidden="true"])) .ytp-tooltip:not(.flrm-tooltip, .ytp-preview, .ytp-tooltip-progress-bar-style) {
+  display: none !important;
 }
 
 #movie_player.flrm-fill-on {

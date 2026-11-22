@@ -78,10 +78,22 @@ function copyStatic(target: BuildTarget): void {
 
   copyFileSync('src/content.css', `${target.distDir}/content.css`);
   copyFileSync('src/popup/popup.html', `${target.distDir}/popup.html`);
-  copyFileSync('src/popup/popup.css', `${target.distDir}/popup.css`);
-  copyFileSync('src/popup/preview.jpg', `${target.distDir}/preview.jpg`);
+  copyFileSync('src/popup/preview.webp', `${target.distDir}/preview.webp`);
   rmSync(`${target.distDir}/icons`, { recursive: true, force: true });
   cpSync('icons', `${target.distDir}/icons`, { recursive: true });
+}
+
+function buildPopupCss(target: BuildTarget): void {
+  const args = ['node_modules/.bin/tailwindcss', '-i', 'src/popup/popup.css', '-o', `${target.distDir}/popup.css`];
+  if (isWatch) {
+    // Plain --watch exits immediately when spawned
+    Bun.spawn([...args, '--watch=always'], { stdout: 'ignore', stderr: 'inherit' });
+    return;
+  }
+  const result = Bun.spawnSync([...args, '--minify'], { stdout: 'ignore', stderr: 'inherit' });
+  if (!result.success) {
+    throw new Error('Tailwind build failed');
+  }
 }
 
 function readText(path: string): string {
@@ -119,6 +131,7 @@ async function main(): Promise<void> {
     for (const target of targets) {
       const ctx = await esbuild.context(buildOptions(target));
       await ctx.watch();
+      buildPopupCss(target);
     }
     console.log('Watching Chrome and Firefox builds... (reload YouTube tab to test)');
     return;
@@ -126,6 +139,7 @@ async function main(): Promise<void> {
 
   for (const target of targets) {
     await esbuild.build(buildOptions(target));
+    buildPopupCss(target);
   }
 
   console.log('Build complete -> dist-chrome/ and dist-firefox/');

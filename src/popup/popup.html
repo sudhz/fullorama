@@ -1,66 +1,75 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scheme-dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Fullorama</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
-  <body>
-    <div class="wrap">
-      <header class="header">
-        <h1><img src="icons/lockup.png" alt="Fullorama" width="121" height="24" /></h1>
-        <div class="status" id="status" role="status" aria-live="polite">
-          <span class="dot" aria-hidden="true"></span>
+  <body class="w-90 bg-bg font-sans text-sm/[1.4] text-text">
+    <div class="flex flex-col gap-3.5 p-5">
+      <header class="flex items-center justify-between gap-3">
+        <h1>
+          <img src="icons/lockup.png" alt="Fullorama" width="121" height="24" class="pointer-events-none h-6 w-auto" />
+          <span class="mt-1 block text-[11px] font-medium text-muted">for YouTube™</span>
+        </h1>
+        <button id="status" type="button" role="switch" aria-checked="false" disabled class="group -mr-2 flex items-center gap-2 rounded-full px-2 py-1 text-[13px] font-medium whitespace-nowrap text-muted enabled:cursor-pointer enabled:hover:bg-white/8 enabled:hover:text-text focus-visible:outline-2 focus-visible:outline-on">
+          <span class="relative h-3 w-5.5 flex-none rounded-full bg-off transition-colors group-aria-checked:bg-on" aria-hidden="true">
+            <span class="absolute top-0.5 left-0.5 size-2 rounded-full bg-white transition-transform group-aria-checked:translate-x-2.5"></span>
+          </span>
           <span id="status-text">Loading…</span>
-        </div>
+        </button>
       </header>
 
-      <section class="original">
-        <p class="eyebrow">Original</p>
-        <div class="original-frame" aria-hidden="true">
-          <img src="preview.jpg" alt="" width="768" height="768" />
+      <section class="mt-1.5">
+        <p class="mb-2.25 text-center text-[13px] text-muted">Original</p>
+        <div class="screen mx-auto w-[46%]" aria-hidden="true">
+          <img src="preview.webp" alt="" width="426" height="320" class="pointer-events-none h-full w-auto max-w-none" />
         </div>
       </section>
 
       <div class="branch" aria-hidden="true"></div>
 
-      <div class="modes" role="group" aria-label="Fill mode">
-        <button class="option" id="mode-crop" type="button" data-mode="crop" aria-pressed="false">
-          <span class="preview-wrap" aria-hidden="true">
-            <span class="preview-bleed"></span>
-            <span class="preview">
-              <img class="preview-frame" src="preview.jpg" alt="" width="768" height="768" />
-            </span>
-          </span>
-          <span class="option-body">
-            <span class="radio" aria-hidden="true"></span>
-            <span class="option-copy">
-              <span class="option-label">Crop</span>
-              <span class="option-desc">Keeps the shape.<br />Cuts off the edges.</span>
-            </span>
-          </span>
-        </button>
+      <fieldset class="grid grid-cols-2 gap-3.5">
+        <legend class="sr-only">Fill mode</legend>
 
-        <button class="option" id="mode-stretch" type="button" data-mode="stretch" aria-pressed="false">
-          <span class="preview-wrap" aria-hidden="true">
-            <span class="preview">
-              <img class="preview-frame" src="preview.jpg" alt="" width="768" height="768" />
+        <label class="group min-w-0 cursor-pointer" data-mode="crop">
+          <input type="radio" name="mode" value="crop" class="sr-only" />
+          <span class="relative block" aria-hidden="true">
+            <span class="bleed opacity-60"></span>
+            <span class="screen relative z-1 group-has-checked:border-transparent group-has-checked:outline-2 group-has-checked:outline-offset-2 group-has-checked:outline-white group-has-focus-visible:outline-2 group-has-focus-visible:outline-offset-4 group-has-focus-visible:outline-on">
+              <img class="preview pointer-events-none h-full w-auto max-w-none" src="preview.webp" alt="" width="426" height="320" />
             </span>
           </span>
-          <span class="option-body">
-            <span class="radio" aria-hidden="true"></span>
-            <span class="option-copy">
-              <span class="option-label">Stretch</span>
-              <span class="option-desc">Shows everything.<br />Pulls the video to fit.</span>
+          <span class="mt-2 flex items-start gap-2.25">
+            <span class="mt-px size-4 flex-none rounded-full border-2 border-[#6f6f6f] group-has-checked:border-white group-has-checked:bg-[radial-gradient(circle,#fff_0_4px,transparent_4.5px)]" aria-hidden="true"></span>
+            <span>
+              <span class="block text-base/[1.2] font-semibold">Crop</span>
+              <span class="mt-0.5 block text-[12.5px]/normal text-muted">Keeps the shape.<br />Cuts off the edges.</span>
             </span>
           </span>
-        </button>
-      </div>
+        </label>
 
-      <footer class="footer">
-        <a href="https://tally.so/r/Y5vaDJ" id="feedback" target="_blank" rel="noreferrer">Share feedback</a>
-        <span class="version">v<span id="version">—</span></span>
+        <label class="group min-w-0 cursor-pointer" data-mode="stretch">
+          <input type="radio" name="mode" value="stretch" class="sr-only" />
+          <span class="relative block" aria-hidden="true">
+            <span class="screen relative z-1 group-has-checked:border-transparent group-has-checked:outline-2 group-has-checked:outline-offset-2 group-has-checked:outline-white group-has-focus-visible:outline-2 group-has-focus-visible:outline-offset-4 group-has-focus-visible:outline-on">
+              <img class="preview pointer-events-none h-full w-auto max-w-none" src="preview.webp" alt="" width="426" height="320" />
+            </span>
+          </span>
+          <span class="mt-2 flex items-start gap-2.25">
+            <span class="mt-px size-4 flex-none rounded-full border-2 border-[#6f6f6f] group-has-checked:border-white group-has-checked:bg-[radial-gradient(circle,#fff_0_4px,transparent_4.5px)]" aria-hidden="true"></span>
+            <span>
+              <span class="block text-base/[1.2] font-semibold">Stretch</span>
+              <span class="mt-0.5 block text-[12.5px]/normal text-muted">Shows everything.<br />Pulls the video to fit.</span>
+            </span>
+          </span>
+        </label>
+      </fieldset>
+
+      <footer class="flex items-center justify-between gap-2.5 border-t border-border pt-3.25 text-xs text-muted">
+        <a href="https://tally.so/r/Y5vaDJ" id="feedback" target="_blank" rel="noreferrer" class="hover:text-text hover:underline focus-visible:text-text focus-visible:underline focus-visible:outline-none">Share feedback</a>
+        <span>v<span id="version">—</span></span>
       </footer>
     </div>
 

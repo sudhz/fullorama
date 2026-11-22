@@ -1,10 +1,11 @@
 /**
- * Button — injects and manages the mode button in YouTube's player.
+ * Button — injects and manages the fill on/off button in YouTube's player.
  */
 
-import { getMode, isEnabled, toggleEnabled } from '../storage/state';
+import { getMode, isEnabled, MODE_NAMES, statusText, toggleEnabled } from '../storage/state';
 import { applyFill } from './fill';
 import { getPlayer } from './dom';
+import { addTooltip } from './tooltip';
 
 const BUTTON_ATTR = 'data-flrm-btn';
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -49,21 +50,11 @@ function createIcon(): SVGSVGElement {
     svg.append(
         group,
         svgElement<SVGRectElement>('rect', {
-            class: 'flrm-crop',
+            class: 'flrm-on',
             x: '13',
             y: '13',
             width: '10',
             height: '10',
-            rx: '1',
-            fill: 'currentColor',
-            stroke: 'none',
-        }),
-        svgElement<SVGRectElement>('rect', {
-            class: 'flrm-stretch',
-            x: '10',
-            y: '15',
-            width: '16',
-            height: '6',
             rx: '1',
             fill: 'currentColor',
             stroke: 'none',
@@ -74,23 +65,8 @@ function createIcon(): SVGSVGElement {
 }
 
 function syncButtonState(button: HTMLElement): void {
-    const mode = getMode();
-    const enabled = isEnabled();
-    const label = `Fullorama: ${mode} ${enabled ? 'on' : 'off'}`;
-    const pressed = String(enabled);
-
-    if (button.dataset.flrmMode !== mode) {
-        button.dataset.flrmMode = mode;
-    }
-    if (button.title !== label) {
-        button.title = label;
-    }
-    if (button.getAttribute('aria-label') !== label) {
-        button.setAttribute('aria-label', label);
-    }
-    if (button.getAttribute('aria-pressed') !== pressed) {
-        button.setAttribute('aria-pressed', pressed);
-    }
+    button.setAttribute('aria-label', `Fullorama ${MODE_NAMES[getMode()]}`);
+    button.setAttribute('aria-pressed', String(isEnabled()));
 }
 
 function onButtonClick(event: Event): void {
@@ -114,6 +90,7 @@ export function injectButton(
     button.className = 'ytp-button flrm-btn';
     button.append(createIcon());
     button.addEventListener('click', onButtonClick);
+    addTooltip(player, button, () => `Fullorama: ${statusText()}`);
     syncButtonState(button);
 
     controls.insertBefore(

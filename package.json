@@ -36,11 +36,14 @@
     "release": "bun run validate && bun run pack:all"
   },
   "devDependencies": {
+    "@happy-dom/global-registrator": "^21.0.4",
+    "@tailwindcss/cli": "^4.3.5",
     "@types/bun": "^1.2.0",
     "@types/chrome": "^0.0.326",
     "@types/node": "^22.13.14",
     "esbuild": "^0.25.5",
     "fflate": "^0.8.3",
+    "tailwindcss": "^4.3.5",
     "typescript": "^5.8.3",
     "web-ext": "10.3.0"
   }

@@ -99,8 +99,8 @@ describe('generated build output', () => {
     });
 
     it('packages the popup preview image', () => {
-        expect(existsSync(join('dist-chrome', 'preview.jpg'))).toBe(true);
-        expect(existsSync(join('dist-firefox', 'preview.jpg'))).toBe(true);
+        expect(existsSync(join('dist-chrome', 'preview.webp'))).toBe(true);
+        expect(existsSync(join('dist-firefox', 'preview.webp'))).toBe(true);
     });
 
     it('Firefox popup.js contains firefox-popup source', () => {
