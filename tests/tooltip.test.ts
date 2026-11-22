@@ -2,6 +2,8 @@ import { GlobalRegistrator } from '@happy-dom/global-registrator';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'bun:test';
 import { addTooltip } from '../src/player/tooltip';
 
+const contentCss = await Bun.file('src/content.css').text();
+
 beforeAll(() => GlobalRegistrator.register());
 afterAll(() => GlobalRegistrator.unregister());
 
@@ -10,6 +12,7 @@ let youtubeTooltip: HTMLElement;
 let label: string;
 
 beforeEach(() => {
+    document.head.innerHTML = `<style>${contentCss}</style>`;
     document.body.innerHTML = `
         <div id="movie_player">
             <div class="ytp-tooltip ytp-bottom" style="display: none" aria-hidden="true"><span class="ytp-tooltip-text">Settings</span></div>
@@ -44,13 +47,29 @@ describe('addTooltip', () => {
         expect(ourTooltipText()).toBeNull();
     });
 
-    it('updates its text in place on click and hides on Escape', () => {
+    it('hides when the button is re-added while its tooltip shows', () => {
+        button.dispatchEvent(new Event('mouseenter'));
+        button.remove();
+        const newButton = document.createElement('button');
+        document.querySelector('.ytp-right-controls')!.append(newButton);
+        addTooltip(document.querySelector<HTMLElement>('#movie_player')!, newButton, () => label);
+        expect(ourTooltipText()).toBeNull();
+    });
+
+    it('updates its text in place when the setting changes, and hides on Escape', async () => {
         button.dispatchEvent(new Event('mouseenter'));
         label = 'Fullorama: Crop is off';
-        button.dispatchEvent(new Event('click'));
+        button.setAttribute('aria-pressed', 'false');
+        await Promise.resolve();
         expect(ourTooltipText()).toBe('Fullorama: Crop is off');
 
         button.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+        expect(ourTooltipText()).toBeNull();
+    });
+
+    it('stays hidden when the setting changes while it is hidden', async () => {
+        button.setAttribute('aria-pressed', 'false');
+        await Promise.resolve();
         expect(ourTooltipText()).toBeNull();
     });
 
@@ -60,19 +79,29 @@ describe('addTooltip', () => {
         expect(ourTooltipText()).toBeNull();
     });
 
-    it('stays when YouTube then shows a button tooltip, since the first one shown stays', async () => {
+    it('keeps YouTube\'s tooltip hidden while ours shows, since the first one shown stays', async () => {
         button.dispatchEvent(new Event('focus'));
         showYouTubeTooltip();
         await Promise.resolve(); // let the MutationObserver callback run
         expect(ourTooltipText()).toBe('Fullorama: Crop is on');
+        expect(getComputedStyle(youtubeTooltip).visibility).toBe('hidden');
     });
 
     it('gives way to the seek preview', async () => {
         button.dispatchEvent(new Event('focus'));
-        youtubeTooltip.classList.add('ytp-preview');
+        youtubeTooltip.classList.add('ytp-tooltip-progress-bar-style', 'ytp-preview');
         showYouTubeTooltip();
         await Promise.resolve();
         expect(ourTooltipText()).toBeNull();
+    });
+
+    it('stays when the Next button shows its thumbnail tooltip', async () => {
+        button.dispatchEvent(new Event('focus'));
+        youtubeTooltip.classList.add('ytp-text-detail', 'ytp-preview');
+        showYouTubeTooltip();
+        await Promise.resolve();
+        expect(ourTooltipText()).toBe('Fullorama: Crop is on');
+        expect(getComputedStyle(youtubeTooltip).visibility).toBe('hidden');
     });
 
     it('hides when YouTube autohides the player controls', async () => {

@@ -11,7 +11,7 @@
  */
 
 import esbuild from 'esbuild';
-import { copyFileSync, cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, cpSync, mkdirSync, readFileSync, rmSync, watch, writeFileSync } from 'node:fs';
 
 const isWatch = process.argv.includes('--watch');
 const packageJson = JSON.parse(readText('package.json')) as { version: string };
@@ -84,15 +84,14 @@ function copyStatic(target: BuildTarget): void {
 }
 
 function buildPopupCss(target: BuildTarget): void {
-  const args = ['node_modules/.bin/tailwindcss', '-i', 'src/popup/popup.css', '-o', `${target.distDir}/popup.css`];
-  if (isWatch) {
-    // Plain --watch exits immediately when spawned
-    Bun.spawn([...args, '--watch=always'], { stdout: 'ignore', stderr: 'inherit' });
-    return;
-  }
-  const result = Bun.spawnSync([...args, '--minify'], { stdout: 'ignore', stderr: 'inherit' });
+  const args = [process.execPath, 'node_modules/@tailwindcss/cli/dist/index.mjs', '-i', 'src/popup/popup.css', '-o', `${target.distDir}/popup.css`];
+  const result = Bun.spawnSync(isWatch ? args : [...args, '--minify'], { stdout: 'ignore', stderr: 'inherit' });
   if (!result.success) {
     throw new Error('Tailwind build failed');
+  }
+  if (isWatch) {
+    // Plain --watch exits when spawned, and the native watcher fails under Bun
+    Bun.spawn([...args, '--watch=always', '--poll'], { stdout: 'ignore', stderr: 'inherit' });
   }
 }
 
@@ -133,6 +132,11 @@ async function main(): Promise<void> {
       await ctx.watch();
       buildPopupCss(target);
     }
+    watch('src/popup/popup.html', () => {
+      for (const target of targets) {
+        copyFileSync('src/popup/popup.html', `${target.distDir}/popup.html`);
+      }
+    });
     console.log('Watching Chrome and Firefox builds... (reload YouTube tab to test)');
     return;
   }

@@ -40,9 +40,11 @@ export async function loadState(): Promise<void> {
     mode = parseMode(result[MODE_KEY]) ?? 'crop';
 
     // Temporary: moves the pre-1.3.0 `cropEnabled` key. Remove in the release after 1.3.0.
-    if (LEGACY_ENABLED_KEY in result && !(ENABLED_KEY in result)) {
-        enabled = result[LEGACY_ENABLED_KEY] === true;
-        await extensionApi.storage.local.set({ [ENABLED_KEY]: enabled });
+    if (LEGACY_ENABLED_KEY in result) {
+        if (!(ENABLED_KEY in result)) {
+            enabled = result[LEGACY_ENABLED_KEY] === true;
+            await extensionApi.storage.local.set({ [ENABLED_KEY]: enabled });
+        }
         await extensionApi.storage.local.remove(LEGACY_ENABLED_KEY);
     }
 }

@@ -16,8 +16,8 @@
 }
 
 /* Only one tooltip at a time: YouTube's stay hidden while ours shows */
-#movie_player:has(.flrm-tooltip:not([aria-hidden="true"])) .ytp-tooltip:not(.flrm-tooltip, .ytp-preview, .ytp-tooltip-progress-bar-style) {
-  display: none !important;
+#movie_player:has(.flrm-tooltip:not([aria-hidden="true"])) .ytp-tooltip:not(.flrm-tooltip, .ytp-tooltip-progress-bar-style) {
+  visibility: hidden !important;
 }
 
 #movie_player.flrm-fill-on {

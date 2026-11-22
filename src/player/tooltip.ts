@@ -34,7 +34,7 @@ function getTooltip(player: HTMLElement): HTMLElement {
     new MutationObserver((records) => {
         const replaced = records.some(({ target }) => target === player
             ? player.classList.contains('ytp-autohide')
-            : (target as HTMLElement).matches('.ytp-preview, .ytp-tooltip-progress-bar-style') && isShown(target as HTMLElement));
+            : (target as HTMLElement).classList.contains('ytp-tooltip-progress-bar-style') && isShown(target as HTMLElement));
         if (replaced) {
             hide(tooltip);
         }
@@ -45,6 +45,7 @@ function getTooltip(player: HTMLElement): HTMLElement {
 
 export function addTooltip(player: HTMLElement, button: HTMLElement, text: () => string): void {
     const tooltip = getTooltip(player);
+    hide(tooltip);
 
     const show = () => {
         const youtubeTooltips = player.querySelectorAll<HTMLElement>(`.ytp-tooltip:not(.${TOOLTIP_CLASS})`);
@@ -70,11 +71,11 @@ export function addTooltip(player: HTMLElement, button: HTMLElement, text: () =>
     button.addEventListener('focus', show);
     button.addEventListener('mouseleave', () => hide(tooltip));
     button.addEventListener('blur', () => hide(tooltip));
-    button.addEventListener('click', () => {
+    new MutationObserver(() => {
         if (isShown(tooltip)) {
             show();
         }
-    });
+    }).observe(button, { attributes: true, attributeFilter: ['aria-pressed', 'aria-label'] });
     button.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
             hide(tooltip);

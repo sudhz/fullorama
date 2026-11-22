@@ -70,7 +70,7 @@ Yes, and on any other screen size. Fullorama measures your player and the video,
 
 ### Can I fill the screen and still see the whole picture?
 
-Only if the video is already the same shape as your screen. Otherwise Crop trims a little of the edges, and Stretch pulls the picture out of shape. You can turn the button off any time to see the whole picture.
+Yes, with Stretch mode. It shows the whole picture, but pulls it out of shape. Crop mode keeps the shape and trims a little of the edges instead. You can turn the button off any time to see the original picture.
 
 ### Does it work on Netflix, other sites, or my phone?
 
