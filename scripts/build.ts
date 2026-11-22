@@ -11,7 +11,7 @@
  */
 
 import esbuild from 'esbuild';
-import { copyFileSync, cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, cpSync, mkdirSync, readFileSync, rmSync, watch, writeFileSync } from 'node:fs';
 
 const isWatch = process.argv.includes('--watch');
 const packageJson = JSON.parse(readText('package.json')) as { version: string };
@@ -78,9 +78,21 @@ function copyStatic(target: BuildTarget): void {
 
   copyFileSync('src/content.css', `${target.distDir}/content.css`);
   copyFileSync('src/popup/popup.html', `${target.distDir}/popup.html`);
-  copyFileSync('src/popup/popup.css', `${target.distDir}/popup.css`);
+  copyFileSync('src/popup/preview.webp', `${target.distDir}/preview.webp`);
   rmSync(`${target.distDir}/icons`, { recursive: true, force: true });
   cpSync('icons', `${target.distDir}/icons`, { recursive: true });
+}
+
+function buildPopupCss(target: BuildTarget): void {
+  const args = [process.execPath, 'node_modules/@tailwindcss/cli/dist/index.mjs', '-i', 'src/popup/popup.css', '-o', `${target.distDir}/popup.css`];
+  const result = Bun.spawnSync(isWatch ? args : [...args, '--minify'], { stdout: 'ignore', stderr: 'inherit' });
+  if (!result.success) {
+    throw new Error('Tailwind build failed');
+  }
+  if (isWatch) {
+    // Plain --watch exits when spawned, and the native watcher fails under Bun
+    Bun.spawn([...args, '--watch=always', '--poll'], { stdout: 'ignore', stderr: 'inherit' });
+  }
 }
 
 function readText(path: string): string {
@@ -118,13 +130,20 @@ async function main(): Promise<void> {
     for (const target of targets) {
       const ctx = await esbuild.context(buildOptions(target));
       await ctx.watch();
+      buildPopupCss(target);
     }
+    watch('src/popup/popup.html', () => {
+      for (const target of targets) {
+        copyFileSync('src/popup/popup.html', `${target.distDir}/popup.html`);
+      }
+    });
     console.log('Watching Chrome and Firefox builds... (reload YouTube tab to test)');
     return;
   }
 
   for (const target of targets) {
     await esbuild.build(buildOptions(target));
+    buildPopupCss(target);
   }
 
   console.log('Build complete -> dist-chrome/ and dist-firefox/');

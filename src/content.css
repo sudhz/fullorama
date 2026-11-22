@@ -15,11 +15,16 @@
   display: none;
 }
 
-#movie_player.flrm-crop-on {
+/* Only one tooltip at a time: YouTube's stay hidden while ours shows */
+#movie_player:has(.flrm-tooltip:not([aria-hidden="true"])) .ytp-tooltip:not(.flrm-tooltip, .ytp-tooltip-progress-bar-style) {
+  visibility: hidden !important;
+}
+
+#movie_player.flrm-fill-on {
   overflow: hidden !important;
 }
 
-#movie_player.flrm-crop-on video.html5-main-video {
-  transform: scale(var(--flrm-scale, 1)) !important;
+#movie_player.flrm-fill-on video.html5-main-video {
+  transform: scale(var(--flrm-scale-x, 1), var(--flrm-scale-y, 1)) !important;
   transform-origin: center center !important;
 }

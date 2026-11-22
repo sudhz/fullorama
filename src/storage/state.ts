@@ -1,28 +1,66 @@
 /**
- * State — crop on/off persisted in extension storage.
+ * State — fill mode and on/off persisted in extension storage.
  */
 
 import { extensionApi } from '../platform/extension-api';
 
-export const STORAGE_KEY = 'cropEnabled';
+export type FillMode = 'crop' | 'stretch';
 
-let cropEnabled = false;
+export const MODE_NAMES: Record<FillMode, string> = {
+    crop: 'Crop',
+    stretch: 'Stretch',
+};
+
+export function statusText(): string {
+    return `${MODE_NAMES[mode]} is ${enabled ? 'on' : 'off'}`;
+}
+
+const ENABLED_KEY = 'fillEnabled';
+const MODE_KEY = 'fillMode';
+const LEGACY_ENABLED_KEY = 'cropEnabled';
+
+let enabled = false;
+let mode: FillMode = 'crop';
 
 export function isEnabled(): boolean {
-    return cropEnabled;
+    return enabled;
+}
+
+export function getMode(): FillMode {
+    return mode;
+}
+
+function parseMode(value: unknown): FillMode | null {
+    return value === 'crop' || value === 'stretch' ? value : null;
 }
 
 export async function loadState(): Promise<void> {
-    const result = await extensionApi.storage.local.get(STORAGE_KEY);
-    cropEnabled = result[STORAGE_KEY] === true;
+    const result = await extensionApi.storage.local.get([ENABLED_KEY, MODE_KEY, LEGACY_ENABLED_KEY]);
+    enabled = result[ENABLED_KEY] === true;
+    mode = parseMode(result[MODE_KEY]) ?? 'crop';
+
+    // Temporary: moves the pre-1.3.0 `cropEnabled` key. Remove in the release after 1.3.0.
+    if (LEGACY_ENABLED_KEY in result) {
+        if (!(ENABLED_KEY in result)) {
+            enabled = result[LEGACY_ENABLED_KEY] === true;
+            await extensionApi.storage.local.set({ [ENABLED_KEY]: enabled });
+        }
+        await extensionApi.storage.local.remove(LEGACY_ENABLED_KEY);
+    }
 }
 
 function saveState(): void {
-    extensionApi.storage.local.set({ [STORAGE_KEY]: cropEnabled });
+    extensionApi.storage.local.set({ [ENABLED_KEY]: enabled, [MODE_KEY]: mode });
 }
 
-export function toggleCrop(): void {
-    cropEnabled = !cropEnabled;
+export function selectMode(next: FillMode): void {
+    mode = next;
+    enabled = true;
+    saveState();
+}
+
+export function toggleEnabled(): void {
+    enabled = !enabled;
     saveState();
 }
 
@@ -33,14 +71,14 @@ export function onStorageChange(
         if (area !== 'local') {
             return;
         }
-        const change = changes[STORAGE_KEY];
-        if (change) {
-            const nextEnabled = change.newValue === true;
-            if (cropEnabled === nextEnabled) {
-                return;
-            }
-            cropEnabled = nextEnabled;
-            cb();
+        const enabledChange = changes[ENABLED_KEY];
+        const nextEnabled = enabledChange ? enabledChange.newValue === true : enabled;
+        const nextMode = parseMode(changes[MODE_KEY]?.newValue) ?? mode;
+        if (nextEnabled === enabled && nextMode === mode) {
+            return;
         }
+        enabled = nextEnabled;
+        mode = nextMode;
+        cb();
     });
 }

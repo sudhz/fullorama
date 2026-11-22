@@ -1,10 +1,11 @@
 /**
- * Button — injects and manages the crop toggle button in YouTube's player.
+ * Button — injects and manages the fill on/off button in YouTube's player.
  */
 
-import { isEnabled, toggleCrop } from '../storage/state';
-import { applyCrop } from './crop';
+import { getMode, isEnabled, MODE_NAMES, statusText, toggleEnabled } from '../storage/state';
+import { applyFill } from './fill';
 import { getPlayer } from './dom';
+import { addTooltip } from './tooltip';
 
 const BUTTON_ATTR = 'data-flrm-btn';
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -63,12 +64,17 @@ function createIcon(): SVGSVGElement {
     return svg;
 }
 
+function syncButtonState(button: HTMLElement): void {
+    button.setAttribute('aria-label', `Fullorama ${MODE_NAMES[getMode()]}`);
+    button.setAttribute('aria-pressed', String(isEnabled()));
+}
+
 function onButtonClick(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
-    toggleCrop();
+    toggleEnabled();
     updateButton();
-    applyCrop(getPlayer());
+    applyFill(getPlayer());
 }
 
 export function injectButton(
@@ -82,12 +88,10 @@ export function injectButton(
     const button = document.createElement('button');
     button.setAttribute(BUTTON_ATTR, '');
     button.className = 'ytp-button flrm-btn';
-    button.title = 'Fullorama crop';
-    button.setAttribute('aria-label', 'Fullorama crop');
-    button.setAttribute('aria-pressed', String(isEnabled()));
     button.append(createIcon());
-
     button.addEventListener('click', onButtonClick);
+    addTooltip(player, button, () => `Fullorama: ${statusText()}`);
+    syncButtonState(button);
 
     controls.insertBefore(
         button,
@@ -99,11 +103,7 @@ export function updateButton(): void {
     const btn = document.querySelector<HTMLElement>(
         '#movie_player [' + BUTTON_ATTR + ']',
     );
-    if (!btn) {
-        return;
-    }
-    const pressed = String(isEnabled());
-    if (btn.getAttribute('aria-pressed') !== pressed) {
-        btn.setAttribute('aria-pressed', pressed);
+    if (btn) {
+        syncButtonState(btn);
     }
 }

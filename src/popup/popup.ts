@@ -1,14 +1,9 @@
 /**
- * Popup entrypoint — read-only crop status display.
- *
- * Reads `cropEnabled` from storage.local once when opened and reflects it.
- * It never writes state: the only way to toggle crop is the YouTube player
- * button. The popup closes when focus returns to YouTube, so a live
- * storage listener provides no practical benefit.
+ * Popup entrypoint — selects the fill mode and turns it on.
  */
 
 import { canSendFeedbackMetadata, extensionApi } from '../platform/extension-api';
-import { STORAGE_KEY } from '../storage/state';
+import { getMode, isEnabled, loadState, MODE_NAMES, selectMode, statusText, toggleEnabled } from '../storage/state';
 import { buildFeedbackUrl, FEEDBACK_URL } from '../feedback';
 
 declare const TARGET_BROWSER: 'chrome' | 'firefox';
@@ -17,15 +12,35 @@ const feedbackSource = TARGET_BROWSER === 'firefox'
     ? 'firefox-popup'
     : 'chrome-popup';
 
-function setStatus(text: string, stateClass: string): void {
-    const status = document.getElementById('status');
-    const statusText = document.getElementById('status-text');
-    if (!status || !statusText) {
-        return;
+const status = document.querySelector<HTMLButtonElement>('#status');
+const statusLabel = document.getElementById('status-text');
+
+function render(): void {
+    const mode = getMode();
+
+    if (status && statusLabel) {
+        statusLabel.textContent = statusText();
+        status.setAttribute('aria-label', MODE_NAMES[mode]);
+        status.setAttribute('aria-checked', String(isEnabled()));
+        status.disabled = false;
     }
-    statusText.textContent = text;
-    status.classList.remove('is-on', 'is-off', 'is-unavailable');
-    status.classList.add(stateClass);
+
+    for (const radio of document.querySelectorAll<HTMLInputElement>('input[name="mode"]')) {
+        radio.checked = radio.value === mode;
+    }
+}
+
+function onStatusClick(): void {
+    toggleEnabled();
+    render();
+}
+
+function onModeClick(event: Event): void {
+    const mode = (event.currentTarget as HTMLInputElement).value;
+    if (mode === 'crop' || mode === 'stretch') {
+        selectMode(mode);
+        render();
+    }
 }
 
 async function init(): Promise<void> {
@@ -43,15 +58,18 @@ async function init(): Promise<void> {
             : FEEDBACK_URL;
     }
 
+    for (const radio of document.querySelectorAll<HTMLInputElement>('input[name="mode"]')) {
+        radio.addEventListener('click', onModeClick);
+    }
+    status?.addEventListener('click', onStatusClick);
+
     try {
-        const result = await extensionApi.storage.local.get(STORAGE_KEY);
-        if (result[STORAGE_KEY] === true) {
-            setStatus('Crop is on', 'is-on');
-        } else {
-            setStatus('Crop is off', 'is-off');
-        }
+        await loadState();
+        render();
     } catch {
-        setStatus('Status unavailable', 'is-unavailable');
+        if (statusLabel) {
+            statusLabel.textContent = 'Status unavailable';
+        }
     }
 }
 
