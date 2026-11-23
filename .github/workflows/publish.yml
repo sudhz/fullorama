@@ -271,13 +271,13 @@ jobs:
           name: verified-release-bundle
           path: artifacts/
 
-      - name: Write AMO metadata with release notes
+      - name: Write AMO metadata with name and release notes
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: |
-          jq -n --arg notes "$RELEASE_NOTES" \
-            '{version: {release_notes: {"en-US": $notes}}}' \
-            > /tmp/amo-metadata.json
+          jq --arg notes "$RELEASE_NOTES" \
+            '{name: {"en-US": .name}, version: {release_notes: {"en-US": $notes}}}' \
+            src/manifest.json > /tmp/amo-metadata.json
 
       - name: Submit to AMO
         run: |

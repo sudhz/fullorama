@@ -1,4 +1,4 @@
-# Fullorama for YouTube™
+# Fullorama: Ultrawide Fill for YouTube™
 
 Enjoy YouTube without distracting black bars on your ultrawide monitor.
 
@@ -7,7 +7,7 @@ Website: https://fullorama.com
 [![Install from the Chrome Web Store](https://img.shields.io/badge/Get_it_on-Chrome_Web_Store-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/fullorama-for-youtube/pacjdmdcmmnbpnjfhmjfgenbpedbakjg)
 [![Install from Firefox Add-ons](https://img.shields.io/badge/Get_it_on-Firefox_Add--ons-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/firefox/addon/fullorama/)
 
-Fullorama for YouTube™ adds one button directly to YouTube's player. Turn it on
+Fullorama adds one button directly to YouTube's player. Turn it on
 once and videos stay filled across videos, refreshes, navigation, and
 fullscreen, until you turn it off. Choose Crop to zoom in and trim the edges, or
 Stretch to pull the picture to fit.

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Fullorama for YouTube™",
+  "name": "Fullorama: Ultrawide Fill for YouTube™",
   "description": "Fill your ultrawide screen with YouTube videos, without distracting black bars.",
   "permissions": [
     "storage"

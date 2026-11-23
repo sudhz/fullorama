@@ -1,5 +1,5 @@
 /**
- * Fullorama for YouTube™
+ * Fullorama: Ultrawide Fill for YouTube™
  *
  * Adds a button to the YouTube player that turns the selected fill mode on or
  * off. The toolbar popup chooses crop (uniform zoom that trims edges) or
