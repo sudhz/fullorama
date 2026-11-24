@@ -50,7 +50,11 @@ Install Fullorama for [Chrome](https://chromewebstore.google.com/detail/fulloram
 <details>
 <summary><strong>I can't find the button. Where is it?</strong></summary>
 
-It's with YouTube's own buttons at the bottom-right of the video, between the settings gear and the theater-mode button. Move your mouse over the video if the controls are hidden. If the button isn't there, refresh the YouTube tab once. Tabs that were already open when you installed Fullorama don't get it until you do.
+It's with YouTube's own buttons at the bottom-right of the video, between the settings gear and the theater-mode button.
+
+![YouTube player controls with the Fullorama button highlighted, next to the settings gear](https://github.com/user-attachments/assets/f4ced6a8-830e-43ad-812e-c90d13c4520c)
+
+Move your mouse over the video if the controls are hidden. If the button isn't there, refresh the YouTube tab once. Tabs that were already open when you installed Fullorama don't get it until you do.
 
 </details>
 
