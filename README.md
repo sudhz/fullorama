@@ -4,7 +4,7 @@ Enjoy YouTube without distracting black bars on your ultrawide monitor.
 
 Website: https://fullorama.com
 
-[![Install from the Chrome Web Store](https://img.shields.io/badge/Get_it_on-Chrome_Web_Store-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/fullorama-for-youtube/pacjdmdcmmnbpnjfhmjfgenbpedbakjg)
+[![Install from the Chrome Web Store](https://img.shields.io/badge/Get_it_on-Chrome_Web_Store-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/fullorama-ultrawide-fill/pacjdmdcmmnbpnjfhmjfgenbpedbakjg)
 [![Install from Firefox Add-ons](https://img.shields.io/badge/Get_it_on-Firefox_Add--ons-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/firefox/addon/fullorama/)
 
 Fullorama adds one button directly to YouTube's player. Turn it on
@@ -40,59 +40,98 @@ https://github.com/user-attachments/assets/3c62393f-5d82-4c7b-8543-0c3c0938f052
 
 ## FAQ
 
-### How do I watch YouTube full screen on an ultrawide monitor?
+<details>
+<summary><strong>How do I watch YouTube full screen on an ultrawide monitor?</strong></summary>
 
-Install Fullorama for [Chrome](https://chromewebstore.google.com/detail/fullorama-for-youtube/pacjdmdcmmnbpnjfhmjfgenbpedbakjg) or [Firefox](https://addons.mozilla.org/firefox/addon/fullorama/) and play any YouTube video. Look at the bottom-right of the player: there's a new button with four little corner brackets, next to the settings gear. Click it and the video fills the player. A small square appears in the middle of the icon to show it's on. Click it again to go back to normal. To choose between Crop and Stretch, click Fullorama's icon in your browser toolbar.
+Install Fullorama for [Chrome](https://chromewebstore.google.com/detail/fullorama-ultrawide-fill/pacjdmdcmmnbpnjfhmjfgenbpedbakjg) or [Firefox](https://addons.mozilla.org/firefox/addon/fullorama/) and play any YouTube video. Look at the bottom-right of the player: there's a new button with four little corner brackets, next to the settings gear. Click it and the video fills the player. A small square appears in the middle of the icon to show it's on. Click it again to go back to normal. To choose between Crop and Stretch, click Fullorama's icon in your browser toolbar.
 
-### I can't find the button. Where is it?
+</details>
+
+<details>
+<summary><strong>I can't find the button. Where is it?</strong></summary>
 
 It's with YouTube's own buttons at the bottom-right of the video, between the settings gear and the theater-mode button. Move your mouse over the video if the controls are hidden. If the button isn't there, refresh the YouTube tab once. Tabs that were already open when you installed Fullorama don't get it until you do.
 
-### Will the video look stretched?
+</details>
+
+<details>
+<summary><strong>Will the video look stretched?</strong></summary>
 
 Not in Crop mode. It zooms in evenly from the center, so people and objects keep their normal shape. The trade-off is that a little of the edges gets trimmed. Stretch mode does pull the picture out of shape, but you see all of it. You can switch between them in the toolbar popup.
 
-### Why do some videos still have black bars?
+</details>
+
+<details>
+<summary><strong>Why do some videos still have black bars?</strong></summary>
 
 Some videos have the bars recorded into the picture itself, often old movies or re-uploads. Fullorama can't tell those apart from the real image, so they can stay even with the button on. It also can't show picture that was never in the video.
 
-### Does it work in theater mode and fullscreen?
+</details>
+
+<details>
+<summary><strong>Does it work in theater mode and fullscreen?</strong></summary>
 
 Yes. When you switch to theater mode or fullscreen, the video adjusts automatically to fill the new size.
 
-### Do I have to click it for every video?
+</details>
+
+<details>
+<summary><strong>Do I have to click it for every video?</strong></summary>
 
 No. Turn it on once and it stays on as you watch more videos, refresh, or browse around YouTube. Turn it off the same way whenever you like. It remembers whether you chose Crop or Stretch, too. The setting applies to all of YouTube in that browser.
 
-### Does it work on 21:9 and 32:9 ultrawide monitors?
+</details>
+
+<details>
+<summary><strong>Does it work on 21:9 and 32:9 ultrawide monitors?</strong></summary>
 
 Yes, and on any other screen size. Fullorama measures your player and the video, so it fills 21:9, 32:9, or any other shape. With Crop, a little more of the edges is trimmed on wider screens.
 
-### Can I fill the screen and still see the whole picture?
+</details>
+
+<details>
+<summary><strong>Can I fill the screen and still see the whole picture?</strong></summary>
 
 Yes, with Stretch mode. It shows the whole picture, but pulls it out of shape. Crop mode keeps the shape and trims a little of the edges instead. You can turn the button off any time to see the original picture.
 
-### Does it work on Netflix, other sites, or my phone?
+</details>
+
+<details>
+<summary><strong>Does it work on Netflix, other sites, or my phone?</strong></summary>
 
 No, only YouTube in a desktop browser (Chrome or Firefox). It doesn't work on Netflix, Prime Video, other websites, or the YouTube app on phones and TVs.
 
-### Will it slow YouTube down or make videos sharper?
+</details>
+
+<details>
+<summary><strong>Will it slow YouTube down or make videos sharper?</strong></summary>
 
 It just zooms or stretches the video that's already playing, so it doesn't change the video's quality or load anything extra. Zooming in won't make it sharper, either. We haven't measured its effect on performance yet, but it does very little work. It only resizes the video you're watching.
 
-### What's the toolbar icon for?
+</details>
+
+<details>
+<summary><strong>What's the toolbar icon for?</strong></summary>
 
 Clicking Fullorama's icon in your browser toolbar lets you choose Crop or Stretch and turn it on or off. Choosing a mode turns it on, so you see it right away. The button in the video player turns it on or off too. There's also a link to send us feedback if you'd like.
 
-### Does Fullorama collect my data?
+</details>
+
+<details>
+<summary><strong>Does Fullorama collect my data?</strong></summary>
 
 No. It saves two things in your browser: whether it's on or off, and whether you chose Crop or Stretch. It doesn't track what you watch, has no ads, and needs no account.
 
 Feedback is optional and goes through a separate form run by Tally. It opens if you choose "Share feedback" in the toolbar popup, or after you uninstall. The form link includes the extension's version and where you opened it from. On Firefox, those two details are only sent if you've allowed the optional data permission. See the [privacy policy](https://fullorama.com/privacy) for the full details.
 
-### Is it free?
+</details>
+
+<details>
+<summary><strong>Is it free?</strong></summary>
 
 Yes, completely free and open source. The code is on GitHub under the [MIT license](LICENSE).
+
+</details>
 
 ## Install Locally
 
